@@ -17,6 +17,7 @@
  * limitations under the License.
  * ---license-end
  */
+
 package eu.europa.ec.dgc.booking.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
@@ -26,7 +27,6 @@ import java.util.Optional;
 import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,7 +47,7 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI openApi() {
         log.info("Configuration of OpenAPI");
-        
+
         String version;
         if (buildProperties.isPresent()) {
             version = buildProperties.get().getVersion();
@@ -56,12 +56,12 @@ public class OpenApiConfig {
             version = "dev";
         }
         return new OpenAPI()
-            .info(new Info()
-                .title("EU Digital COVID Certificate Booking Demo")
-                .description("The API provides exemplary booking endpoints")
-                .version(version)
-                .license(new License()
-                    .name("Apache 2.0")
-                    .url("https://www.apache.org/licenses/LICENSE-2.0")));
+                .info(new Info()
+                        .title("EU Digital COVID Certificate Booking Demo")
+                        .description("The API provides exemplary booking endpoints")
+                        .version(version)
+                        .license(new License()
+                                .name("Apache 2.0")
+                                .url("https://www.apache.org/licenses/LICENSE-2.0")));
     }
 }

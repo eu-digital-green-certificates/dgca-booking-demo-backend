@@ -17,10 +17,11 @@
  * limitations under the License.
  * ---license-end
  */
+
 package eu.europa.ec.dgc.booking.entity;
 
-import java.time.OffsetDateTime;
 import com.github.javafaker.Faker;
+import java.time.OffsetDateTime;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -33,14 +34,19 @@ import lombok.ToString;
 public class FlightInfoEntity {
 
     private String from;
-    
+
     private String to;
-    
+
     private OffsetDateTime time;
-    
+
+    /**
+     * Create a random FlightInfoEntity that is 2 days in the future.
+     * 
+     * @return {@link FlightInfoEntity}
+     */
     public static FlightInfoEntity random() {
         Faker faker = new Faker();
-        
+
         return FlightInfoEntity.builder()
                 .from(faker.address().cityName())
                 .to(faker.address().cityName())

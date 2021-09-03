@@ -17,6 +17,8 @@
  * limitations under the License.
  * ---license-end
  */
+
+
 package eu.europa.ec.dgc.booking;
 
 import org.springframework.boot.SpringApplication;
@@ -27,7 +29,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = "eu.europa.ec.dgc")
 public class DgcaBookingDemoBackendApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(DgcaBookingDemoBackendApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(DgcaBookingDemoBackendApplication.class, args);
+    }
 }

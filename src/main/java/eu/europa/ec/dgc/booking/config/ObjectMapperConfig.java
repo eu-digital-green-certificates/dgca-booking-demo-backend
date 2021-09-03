@@ -17,17 +17,16 @@
  * limitations under the License.
  * ---license-end
  */
-package eu.europa.ec.dgc.booking.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+package eu.europa.ec.dgc.booking.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 @Slf4j
 @Configuration
@@ -36,7 +35,7 @@ public class ObjectMapperConfig {
     @Bean
     ObjectMapper objectMapper() {
         log.info("Configuration of ObjectMapper");
-        
+
         return new ObjectMapper()
                 .registerModule(new JavaTimeModule())
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)

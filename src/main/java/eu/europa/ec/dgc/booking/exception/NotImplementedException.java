@@ -17,6 +17,7 @@
  * limitations under the License.
  * ---license-end
  */
+
 package eu.europa.ec.dgc.booking.exception;
 
 import org.springframework.http.HttpStatus;

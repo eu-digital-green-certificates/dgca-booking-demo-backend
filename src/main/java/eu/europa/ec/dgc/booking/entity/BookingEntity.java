@@ -17,18 +17,17 @@
  * limitations under the License.
  * ---license-end
  */
+
 package eu.europa.ec.dgc.booking.entity;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.lang3.RandomStringUtils;
-
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.lang3.RandomStringUtils;
 
 @Getter
 @ToString
@@ -46,6 +45,9 @@ public class BookingEntity {
     
     private FlightInfoEntity flightInfo;
     
+    /**
+     * Constructor. Set random value to "subject". Set current timestamp (now) to "time". Set random "flightInfo".
+     */
     public BookingEntity() {
         int length = 10;
         boolean useLetters = true;
@@ -55,6 +57,11 @@ public class BookingEntity {
         this.flightInfo = FlightInfoEntity.random();
     }
     
+    /**
+     * Add PassengerEntity to current {@link List}.
+     * 
+     * @param passenger {@link PassengerEntity}
+     */
     public void addPassenger(PassengerEntity passenger) {    
         this.passengers.add(passenger);
     }

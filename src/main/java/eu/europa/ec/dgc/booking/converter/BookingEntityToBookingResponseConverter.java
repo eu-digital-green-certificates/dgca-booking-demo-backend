@@ -17,21 +17,21 @@
  * limitations under the License.
  * ---license-end
  */
+
 package eu.europa.ec.dgc.booking.converter;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.stereotype.Service;
 
 import eu.europa.ec.dgc.booking.dto.BookingResponse;
 import eu.europa.ec.dgc.booking.dto.BookingResponse.BookingFlightInfoResponse;
-import eu.europa.ec.dgc.booking.dto.BookingResponse.BookingPassengerDCCStatusResponse;
-import eu.europa.ec.dgc.booking.dto.BookingResponse.BookingPassengerDCCStatusResultResponse;
+import eu.europa.ec.dgc.booking.dto.BookingResponse.BookingPassengerDccStatusResponse;
+import eu.europa.ec.dgc.booking.dto.BookingResponse.BookingPassengerDccStatusResultResponse;
 import eu.europa.ec.dgc.booking.dto.BookingResponse.BookingPassengerResponse;
 import eu.europa.ec.dgc.booking.entity.BookingEntity;
-import eu.europa.ec.dgc.booking.entity.DCCStatusEntity;
+import eu.europa.ec.dgc.booking.entity.DccStatusEntity;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.stereotype.Service;
 
 @Service
 public class BookingEntityToBookingResponseConverter implements Converter<BookingEntity, BookingResponse> {
@@ -55,8 +55,8 @@ public class BookingEntityToBookingResponseConverter implements Converter<Bookin
             passengerResponse.setForename(passengerEntity.getForename());
             passengerResponse.setLastname(passengerEntity.getLastname());
             
-            DCCStatusEntity dccStatusEntity = passengerEntity.getDccStatus();
-            if(dccStatusEntity != null) {
+            DccStatusEntity dccStatusEntity = passengerEntity.getDccStatus();
+            if (dccStatusEntity != null) {
                 this.convertDccStatus(passengerResponse, dccStatusEntity);
             }
             return passengerResponse;
@@ -64,21 +64,23 @@ public class BookingEntityToBookingResponseConverter implements Converter<Bookin
         response.setPassengers(passengerResponses);
     }
 
-    private void convertDccStatus(BookingPassengerResponse passengerResponse, DCCStatusEntity dccStatusEntity) {
-        BookingPassengerDCCStatusResponse dccStatusResponse = new BookingPassengerDCCStatusResponse();
+    private void convertDccStatus(BookingPassengerResponse passengerResponse, DccStatusEntity dccStatusEntity) {
+        BookingPassengerDccStatusResponse dccStatusResponse = new BookingPassengerDccStatusResponse();
         dccStatusResponse.setIssuer(dccStatusEntity.getIssuer());
         dccStatusResponse.setIat(dccStatusEntity.getIat());
         dccStatusResponse.setSub(dccStatusEntity.getSub());
         dccStatusResponse.setConfirmation(dccStatusResponse.getConfirmation());
                         
-        List<BookingPassengerDCCStatusResultResponse> results = dccStatusEntity.getResults().stream().map(resultEntity -> {
-            BookingPassengerDCCStatusResultResponse resultResponse = new BookingPassengerDCCStatusResultResponse();
-            resultResponse.setIdentifier(resultEntity.getIdentifier());
-            resultResponse.setResult(resultEntity.getResult().name());
-            resultResponse.setType(resultEntity.getType().getName());
-            resultResponse.setDetails(resultEntity.getDetails());
-            return resultResponse;
-        }).collect(Collectors.toList());
+        List<BookingPassengerDccStatusResultResponse> results = dccStatusEntity.getResults().stream()
+                .map(resultEntity -> {
+                    BookingPassengerDccStatusResultResponse resultResponse = 
+                            new BookingPassengerDccStatusResultResponse();
+                    resultResponse.setIdentifier(resultEntity.getIdentifier());
+                    resultResponse.setResult(resultEntity.getResult().name());
+                    resultResponse.setType(resultEntity.getType().getName());
+                    resultResponse.setDetails(resultEntity.getDetails());
+                    return resultResponse;
+                }).collect(Collectors.toList());
         dccStatusResponse.setResults(results);
         passengerResponse.setDssStatus(dccStatusResponse);
     }

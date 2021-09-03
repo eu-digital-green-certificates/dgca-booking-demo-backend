@@ -17,13 +17,14 @@
  * limitations under the License.
  * ---license-end
  */
+
 package eu.europa.ec.dgc.booking.dto;
 
-public enum DevDCCStatus {
+public enum DevDccStatus {
 
-    FAIL, 
-    
-    MIX, 
-    
+    FAIL,
+
+    MIX,
+
     PASSED;
 }

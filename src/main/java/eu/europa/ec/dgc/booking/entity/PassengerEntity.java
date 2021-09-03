@@ -17,13 +17,12 @@
  * limitations under the License.
  * ---license-end
  */
+
 package eu.europa.ec.dgc.booking.entity;
 
-import java.util.UUID;
-
 import com.github.javafaker.Faker;
-
 import eu.europa.ec.dgc.booking.dto.BookingRequest;
+import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,31 +34,42 @@ import lombok.ToString;
 public class PassengerEntity {
 
     private final UUID id;
-    
+
     @Setter
     private String forename;
-    
+
     @Setter
     private String lastname;
-    
+
     @Setter
-    private DCCStatusEntity dccStatus;
-    
+    private DccStatusEntity dccStatus;
+
     public PassengerEntity() {
         this.id = UUID.randomUUID();
-        this.dccStatus = DCCStatusEntity.empty();
+        this.dccStatus = DccStatusEntity.empty();
     }
-    
+
+    /**
+     * Build PassengerEntity from frontend object {@link BookingRequest}.
+     * 
+     * @param bookingRequest {@link PassengerEntity}
+     * @return {@link PassengerEntity}
+     */
     public static PassengerEntity build(BookingRequest bookingRequest) {
         PassengerEntity passengerData = new PassengerEntity();
         passengerData.setForename(bookingRequest.getForename());
         passengerData.setLastname(bookingRequest.getLastname());
         return passengerData;
     }
-    
+
+    /**
+     * Build a PassengerEntity with random first and lastname.
+     * 
+     * @return {@link PassengerEntity}
+     */
     public static PassengerEntity random() {
         Faker faker = new Faker();
-        
+
         PassengerEntity passengerData = new PassengerEntity();
         passengerData.setForename(faker.name().firstName());
         passengerData.setLastname(faker.name().lastName());

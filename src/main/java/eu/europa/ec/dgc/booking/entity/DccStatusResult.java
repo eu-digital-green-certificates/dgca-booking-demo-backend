@@ -17,24 +17,14 @@
  * limitations under the License.
  * ---license-end
  */
+
 package eu.europa.ec.dgc.booking.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+public enum DccStatusResult {
 
-@Getter
-@AllArgsConstructor
-public enum DCCStatusType {
+    OPEN,
 
-    TECHNICAL_CHECK("Technical Check"),
-    
-    ISSUER_INVALIDATION("Issuer Invalidation"),
-    
-    DESTINATION("Destination"),
-    
-    ACCEPTANCE_TRAVELER("Acceptance Traveler"),
-    
-    ACCEPTANCE("Acceptance");
-    
-    private String name;
+    FAILED,
+
+    PASSED;
 }

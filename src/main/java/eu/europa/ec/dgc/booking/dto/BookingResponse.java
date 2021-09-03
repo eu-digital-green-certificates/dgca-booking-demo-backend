@@ -17,73 +17,74 @@
  * limitations under the License.
  * ---license-end
  */
+
+
 package eu.europa.ec.dgc.booking.dto;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import lombok.Data;
 
 @Data
 public class BookingResponse {
 
     private String reference;
-    
+
     private String subject;
-    
+
     private OffsetDateTime time;
-    
+
     private List<BookingPassengerResponse> passengers = new ArrayList<>();
-    
+
     private BookingFlightInfoResponse flightInfo;
-    
+
     @Data
     public static final class BookingPassengerResponse {
-        
+
         private UUID id;
-        
+
         private String forename;
-        
+
         private String lastname;
-        
-        private BookingPassengerDCCStatusResponse dssStatus;
+
+        private BookingPassengerDccStatusResponse dssStatus;
     }
-    
+
     @Data
-    public static final class BookingPassengerDCCStatusResponse {
-        
+    public static final class BookingPassengerDccStatusResponse {
+
         private String issuer;
-        
-        private long iat; 
-        
-        private String sub; 
-        
-        private List<BookingPassengerDCCStatusResultResponse> results;
-        
+
+        private long iat;
+
+        private String sub;
+
+        private List<BookingPassengerDccStatusResultResponse> results;
+
         private String confirmation;
     }
-    
+
     @Data
-    public static final class BookingPassengerDCCStatusResultResponse {
-        
+    public static final class BookingPassengerDccStatusResultResponse {
+
         private String identifier;
-        
+
         private String result;
-        
+
         private String type;
-        
+
         private String details;
     }
-    
+
     @Data
     public static final class BookingFlightInfoResponse {
-        
+
         private String from;
-        
+
         private String to;
-        
+
         private OffsetDateTime time;
     }
 }

@@ -17,28 +17,27 @@
  * limitations under the License.
  * ---license-end
  */
+
 package eu.europa.ec.dgc.booking.service;
 
-import java.util.Random;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import eu.europa.ec.dgc.booking.dto.BookingRequest;
-import eu.europa.ec.dgc.booking.dto.DevDCCStatus;
+import eu.europa.ec.dgc.booking.dto.DevDccStatus;
 import eu.europa.ec.dgc.booking.entity.BookingEntity;
-import eu.europa.ec.dgc.booking.entity.DCCStatusEntity;
+import eu.europa.ec.dgc.booking.entity.DccStatusEntity;
 import eu.europa.ec.dgc.booking.entity.PassengerEntity;
 import eu.europa.ec.dgc.booking.exception.NotImplementedException;
 import eu.europa.ec.dgc.booking.repository.BookingRepository;
+import java.util.Random;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class BookingService {
 
     private static final int MIX_AT_LEAST = 2;
-    
+
     // Number of additional passengers to be created for the booking reference
     @Value("${demo.passengers.generator.min:0}")
     private Integer passengersGeneratorMin;
@@ -49,45 +48,56 @@ public class BookingService {
 
     private final BookingRepository repository;
 
+    /**
+     * Return current BookingEntity from session.
+     * 
+     * @return {@link BookingEntity}
+     */
     public BookingEntity get() {
         return this.repository.get();
     }
-    
-    public void create(BookingRequest bookingRequest, DevDCCStatus dccStatus) {
+
+    /**
+     * Create and write BookingEntity to session. if an entry already exists, it will be deleted.
+     * 
+     * @param bookingRequest data from the frontend
+     * @param dccStatus      status manipulation for test purposes
+     */
+    public void create(BookingRequest bookingRequest, DevDccStatus dccStatus) {
         repository.clean();
-        
+
         BookingEntity bookingEntity = new BookingEntity();
         bookingEntity.setReference(bookingRequest.getBookingReference());
         bookingEntity.addPassenger(PassengerEntity.build(bookingRequest));
-        
-        int passengersMin = dccStatus == DevDCCStatus.MIX ? 1 : passengersGeneratorMin;
+
+        int passengersMin = dccStatus == DevDccStatus.MIX ? 1 : passengersGeneratorMin;
         Integer numberToGenerate = new Random().nextInt(passengersGeneratorMax - passengersMin) + passengersMin;
         for (int i = 0; i < numberToGenerate; i++) {
-            bookingEntity.addPassenger(PassengerEntity.random());    
-        }        
-        
+            bookingEntity.addPassenger(PassengerEntity.random());
+        }
+
         this.updatePassengersDccStatus(dccStatus, bookingEntity);
-        
+
         repository.save(bookingEntity);
     }
 
-    private void updatePassengersDccStatus(DevDCCStatus dccStatus, BookingEntity bookingEntity) {
+    private void updatePassengersDccStatus(DevDccStatus dccStatus, BookingEntity bookingEntity) {
         switch (dccStatus) {
             case FAIL:
-                bookingEntity.getPassengers().forEach(pass -> pass.setDccStatus(DCCStatusEntity.failed()));
+                bookingEntity.getPassengers().forEach(pass -> pass.setDccStatus(DccStatusEntity.failed()));
                 break;
             case PASSED:
-                bookingEntity.getPassengers().forEach(pass -> pass.setDccStatus(DCCStatusEntity.passed()));
+                bookingEntity.getPassengers().forEach(pass -> pass.setDccStatus(DccStatusEntity.passed()));
                 break;
             case MIX: // must be at least 2
-                bookingEntity.getPassengers().forEach(pass -> pass.setDccStatus(DCCStatusEntity.passed()));
-                if(bookingEntity.getPassengers().size() >= MIX_AT_LEAST) {
-                    bookingEntity.getPassengers().get(0).setDccStatus(DCCStatusEntity.passed());    
-                    bookingEntity.getPassengers().get(1).setDccStatus(DCCStatusEntity.failed());
-                }                
+                bookingEntity.getPassengers().forEach(pass -> pass.setDccStatus(DccStatusEntity.passed()));
+                if (bookingEntity.getPassengers().size() >= MIX_AT_LEAST) {
+                    bookingEntity.getPassengers().get(0).setDccStatus(DccStatusEntity.passed());
+                    bookingEntity.getPassengers().get(1).setDccStatus(DccStatusEntity.failed());
+                }
                 break;
             default:
-                throw new NotImplementedException(); 
+                throw new NotImplementedException();
         }
     }
 }
