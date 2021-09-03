@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+
+  dgca-booking-demo-backend:
+    build: .
+    image: eu-digital-green-certificates/dgca-businessrule-service
+    container_name: dgca-booking-demo-backend
+    ports:
+      - 8080:8080
