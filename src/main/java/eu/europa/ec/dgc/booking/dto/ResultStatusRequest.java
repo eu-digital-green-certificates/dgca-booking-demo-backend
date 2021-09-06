@@ -20,39 +20,25 @@
 
 package eu.europa.ec.dgc.booking.dto;
 
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
+import eu.europa.ec.dgc.booking.entity.DccStatusResult;
+import eu.europa.ec.dgc.booking.entity.DccStatusType;
 import java.util.List;
-import java.util.UUID;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class BookingResponse {
+public class ResultStatusRequest {
 
-    private String reference;
+    private String token;
 
-    private String subject;
-
-    private OffsetDateTime time;
-
-    private List<BookingPassengerResponse> passengers = new ArrayList<>();
-
-    private BookingFlightInfoResponse flightInfo;
+    @Valid
+    @NotNull
+    private ResultStatusDccStatusRequest dccStatus;
 
     @Data
-    public static final class BookingPassengerResponse {
-
-        private UUID id;
-
-        private String forename;
-
-        private String lastname;
-
-        private BookingPassengerDccStatusResponse dssStatus;
-    }
-
-    @Data
-    public static final class BookingPassengerDccStatusResponse {
+    public static final class ResultStatusDccStatusRequest {
 
         private String issuer;
 
@@ -60,30 +46,20 @@ public class BookingResponse {
 
         private String sub;
 
-        private List<BookingPassengerDccStatusResultResponse> results;
-
-        private String confirmation;
+        @Valid
+        @NotEmpty
+        private List<ResultStatusDccStatusResultRequest> results;
     }
 
     @Data
-    public static final class BookingPassengerDccStatusResultResponse {
+    public static final class ResultStatusDccStatusResultRequest {
 
         private String identifier;
 
-        private String result;
+        private DccStatusResult result;
 
-        private String type;
+        private DccStatusType type;
 
         private String details;
-    }
-
-    @Data
-    public static final class BookingFlightInfoResponse {
-
-        private String from;
-
-        private String to;
-
-        private OffsetDateTime time;
     }
 }

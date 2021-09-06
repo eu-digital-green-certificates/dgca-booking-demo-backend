@@ -22,14 +22,18 @@ package eu.europa.ec.dgc.booking.service;
 
 import eu.europa.ec.dgc.booking.dto.BookingRequest;
 import eu.europa.ec.dgc.booking.dto.DevDccStatus;
+import eu.europa.ec.dgc.booking.dto.ResultStatusRequest;
 import eu.europa.ec.dgc.booking.entity.BookingEntity;
 import eu.europa.ec.dgc.booking.entity.DccStatusEntity;
 import eu.europa.ec.dgc.booking.entity.PassengerEntity;
 import eu.europa.ec.dgc.booking.exception.NotImplementedException;
 import eu.europa.ec.dgc.booking.repository.BookingRepository;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -47,6 +51,8 @@ public class BookingService {
     private Integer passengersGeneratorMax;
 
     private final BookingRepository repository;
+
+    private final ConversionService converter;
 
     /**
      * Return current BookingEntity from session.
@@ -81,6 +87,48 @@ public class BookingService {
         repository.save(bookingEntity);
     }
 
+    /**
+     * Checks whether DCC status is set for all passengers.
+     * 
+     * @return {@link Boolean}
+     */
+    public boolean existsDcc() {
+        return this.repository.get().getPassengers().stream()
+                .allMatch(passenger -> passenger.getDccStatus() != null);
+    }
+
+    /**
+     * Updates the DCC status for all passengers.
+     * 
+     * @param subject       Subject
+     * @param resultRequest received result
+     * @return Number of changed passengers
+     */
+    public int updateResult(final String subject, final ResultStatusRequest resultRequest) {
+        return updateResult(subject, null, resultRequest);
+    }
+
+    /**
+     * Updates the DCC status for one passenger by ID.
+     * 
+     * @param subject       Subject
+     * @param passengerId   passenger ID
+     * @param resultRequest received result
+     * @return Number of changed passengers
+     */
+    public int updateResult(final String subject, final String passengerId, final ResultStatusRequest resultRequest) {
+        final BookingEntity bookingEntity = this.repository.get();
+        final List<PassengerEntity> passengerForUpdate = bookingEntity.getPassengers().stream()
+                .filter(passenger -> passengerId == null || passengerId.equals(passenger.getId().toString()))
+                .collect(Collectors.toList());
+
+        passengerForUpdate.forEach(passenger -> {
+            final DccStatusEntity dccStatusEntity = converter.convert(resultRequest, DccStatusEntity.class);
+            passenger.setDccStatus(dccStatusEntity);
+        });
+        return passengerForUpdate.size();
+    }
+
     private void updatePassengersDccStatus(DevDccStatus dccStatus, BookingEntity bookingEntity) {
         if (dccStatus != null) {
             switch (dccStatus) {
@@ -101,10 +149,5 @@ public class BookingService {
                     throw new NotImplementedException();
             }
         }
-    }
-
-    public boolean existsDcc() {
-        return this.repository.get().getPassengers().stream()
-                .anyMatch(passenger -> passenger.getDccStatus() != null);
     }
 }

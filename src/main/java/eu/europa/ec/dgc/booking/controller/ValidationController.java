@@ -45,7 +45,7 @@ public class ValidationController {
      * 
      * @return HttpStatus 200 or 204
      */
-    @Operation(summary = "Booking Route", description = "Booking Route")
+    @Operation(summary = "Validation Status Route", description = "Validation Status Route")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
         @ApiResponse(responseCode = "204", description = "No content"),

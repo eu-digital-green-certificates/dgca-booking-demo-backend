@@ -56,7 +56,7 @@ public class BoardingController {
     })
     @ResponseStatus(code = HttpStatus.OK)
     @GetMapping(path = PATH_PASS, produces = MediaType.APPLICATION_JSON_VALUE)
-    public BoardingPassDto booking(@PathVariable(value = "subject", required = true) String subject) {
+    public BoardingPassDto boardingPass(@PathVariable(value = "subject", required = true) String subject) {
         log.debug("Incoming POST request to '{}' with subject '{}'", PATH_PASS, subject);
         return this.converter.convert(bookingService.get(), BoardingPassDto.class);
     }
