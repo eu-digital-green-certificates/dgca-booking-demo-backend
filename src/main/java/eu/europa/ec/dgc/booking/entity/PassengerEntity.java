@@ -46,7 +46,6 @@ public class PassengerEntity {
 
     public PassengerEntity() {
         this.id = UUID.randomUUID();
-        this.dccStatus = DccStatusEntity.empty();
     }
 
     /**

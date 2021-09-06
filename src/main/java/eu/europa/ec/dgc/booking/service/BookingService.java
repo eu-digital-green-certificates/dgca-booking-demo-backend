@@ -82,22 +82,29 @@ public class BookingService {
     }
 
     private void updatePassengersDccStatus(DevDccStatus dccStatus, BookingEntity bookingEntity) {
-        switch (dccStatus) {
-            case FAIL:
-                bookingEntity.getPassengers().forEach(pass -> pass.setDccStatus(DccStatusEntity.failed()));
-                break;
-            case PASSED:
-                bookingEntity.getPassengers().forEach(pass -> pass.setDccStatus(DccStatusEntity.passed()));
-                break;
-            case MIX: // must be at least 2
-                bookingEntity.getPassengers().forEach(pass -> pass.setDccStatus(DccStatusEntity.passed()));
-                if (bookingEntity.getPassengers().size() >= MIX_AT_LEAST) {
-                    bookingEntity.getPassengers().get(0).setDccStatus(DccStatusEntity.passed());
-                    bookingEntity.getPassengers().get(1).setDccStatus(DccStatusEntity.failed());
-                }
-                break;
-            default:
-                throw new NotImplementedException();
+        if (dccStatus != null) {
+            switch (dccStatus) {
+                case FAIL:
+                    bookingEntity.getPassengers().forEach(pass -> pass.setDccStatus(DccStatusEntity.failed()));
+                    break;
+                case PASSED:
+                    bookingEntity.getPassengers().forEach(pass -> pass.setDccStatus(DccStatusEntity.passed()));
+                    break;
+                case MIX: // must be at least 2
+                    bookingEntity.getPassengers().forEach(pass -> pass.setDccStatus(DccStatusEntity.passed()));
+                    if (bookingEntity.getPassengers().size() >= MIX_AT_LEAST) {
+                        bookingEntity.getPassengers().get(0).setDccStatus(DccStatusEntity.passed());
+                        bookingEntity.getPassengers().get(1).setDccStatus(DccStatusEntity.failed());
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
         }
+    }
+
+    public boolean existsDcc() {
+        return this.repository.get().getPassengers().stream()
+                .anyMatch(passenger -> passenger.getDccStatus() != null);
     }
 }
