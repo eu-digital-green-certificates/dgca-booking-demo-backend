@@ -1,0 +1,30 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: dgca-booking-demo-backend
+
+management:
+  endpoint:
+    info:
+      enabled: true
+    health:
+      enabled: true
+  endpoints:
+    enabled-by-default: false
+    web:
+      base-path: /management
+      exposure:
+        include: info,health
+
+logging:
+  level:
+    eu.europa.ec.dgc.booking: DEBUG
+
+#### Example with default values:
+#demo:
+#  passengers:
+#    #### Number of additional passengers to be created for the booking reference
+#    generator:
+#      min: 0
+#      max: 2
