@@ -56,8 +56,8 @@ public class TokenController {
     })
     @ResponseStatus(code = HttpStatus.OK)
     @GetMapping(path = PATH, produces = MediaType.APPLICATION_JSON_VALUE)
-    public BookingResponse tokencontent(@PathVariable(value = "subject", required = true) final String subject) {
-        log.debug("Incoming GET request to '{}' with subject '{}'", PATH, subject);
-        return converter.convert(bookingService.getBySubject(subject), BookingResponse.class);
+    public BookingResponse tokencontent(@PathVariable(value = "subject", required = true) final String passengerId) {
+        log.debug("Incoming GET request to '{}' with passenger ID '{}'", PATH, passengerId);
+        return converter.convert(bookingService.getByPassengerId(passengerId), BookingResponse.class);
     }
 }

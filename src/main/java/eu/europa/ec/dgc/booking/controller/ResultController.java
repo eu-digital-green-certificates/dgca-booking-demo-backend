@@ -43,15 +43,14 @@ public class ResultController {
 
     private static final String PATH = "/result/{subject}";
 
-    private static final String PATH_PASSENGER = "/result/{subject}/passenger/{passengerId}";
 
     private final BookingService bookingService;
 
     /**
      * Receives the DCC Status of an subject from the validation decorator and update the passenger.
      * 
-     * @param subject Subject
-     * @param result  {@link ResultStatusRequest}
+     * @param passengerId Subject
+     * @param result      {@link ResultStatusRequest}
      */
     @Operation(summary = "Result Route (private)", description = "Result Route (private)")
     @ApiResponses(value = {
@@ -65,38 +64,10 @@ public class ResultController {
     @ResponseStatus(code = HttpStatus.OK)
     @PutMapping(path = PATH, consumes = MediaType.APPLICATION_JSON_VALUE)
     public void resultSubject(
-            @PathVariable(value = "subject", required = true) final String subject,
+            @PathVariable(value = "subject", required = true) final String passengerId,
             @Valid @RequestBody final ResultStatusRequest result) {
-        log.debug("Incoming PUT request to '{}' with subject '{}' and content '{}'", PATH, subject, result);
-        final int updateCount = bookingService.updateResult(subject, result);
-        log.debug("Update '{}' passengers", updateCount);
-    }
-
-    /**
-     * Receives the DCC Status of an subject from the validation decorator and update the passenger.
-     * 
-     * @param subject     Subject
-     * @param passengerId Passenger ID
-     * @param result      {@link ResultStatusRequest}
-     */
-    @Operation(summary = "Result Route (private)", description = "Result Route (private)")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "OK"),
-        @ApiResponse(responseCode = "400", description = "Bad Request / Validation errors"),
-        @ApiResponse(responseCode = "404", description = "Not Found"),
-        @ApiResponse(responseCode = "415", description = "Unsupported Media Type"),
-        @ApiResponse(responseCode = "500", description = "Internal Server Error"),
-        @ApiResponse(responseCode = "501", description = "Not Implemented")
-    })
-    @ResponseStatus(code = HttpStatus.OK)
-    @PutMapping(path = PATH_PASSENGER, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void resultSubjectPassenger(
-            @PathVariable(value = "subject", required = true) final String subject,
-            @PathVariable(value = "passengerId", required = true) final String passengerId,
-            @Valid @RequestBody final ResultStatusRequest result) {
-        log.debug("Incoming PUT request to '{}' with subject '{}', passenger ID '{}' and content '{}'",
-                PATH_PASSENGER, subject, passengerId, result);
-        final int updateCount = bookingService.updateResult(subject, passengerId, result);
+        log.debug("Incoming PUT request to '{}' with passenger ID '{}' and content '{}'", PATH, passengerId, result);
+        final int updateCount = bookingService.updateResult(passengerId, result);
         log.debug("Update '{}' passengers", updateCount);
     }
 }

@@ -31,8 +31,6 @@ public class BookingResponse {
 
     private String reference;
 
-    private String subject;
-
     private OffsetDateTime time;
 
     private List<BookingPassengerResponse> passengers = new ArrayList<>();

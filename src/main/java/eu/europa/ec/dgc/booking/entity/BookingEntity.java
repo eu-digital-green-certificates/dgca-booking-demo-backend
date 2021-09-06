@@ -27,7 +27,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.apache.commons.lang3.RandomStringUtils;
 
 @Getter
 @ToString
@@ -36,33 +35,27 @@ public class BookingEntity {
 
     @Setter
     private String reference;
-    
-    private String subject;
-    
+
     private OffsetDateTime time;
-    
+
     private List<PassengerEntity> passengers = new ArrayList<>();
-    
+
     private FlightInfoEntity flightInfo;
-    
+
     /**
-     * Constructor. Set random value to "subject". Set current timestamp (now) to "time". Set random "flightInfo".
+     * Constructor. Set current timestamp (now) to "time". Set random "flightInfo".
      */
     public BookingEntity() {
-        int length = 10;
-        boolean useLetters = true;
-        boolean useNumbers = false;
-        this.subject = RandomStringUtils.random(length, useLetters, useNumbers);
         this.time = OffsetDateTime.now();
         this.flightInfo = FlightInfoEntity.random();
     }
-    
+
     /**
      * Add PassengerEntity to current {@link List}.
      * 
      * @param passenger {@link PassengerEntity}
      */
-    public void addPassenger(PassengerEntity passenger) {    
+    public void addPassenger(PassengerEntity passenger) {
         this.passengers.add(passenger);
     }
 }

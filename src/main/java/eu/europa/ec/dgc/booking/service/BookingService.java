@@ -65,17 +65,19 @@ public class BookingService {
     }
 
     /**
-     * Return current BookingEntity from session by Subject.
+     * Return current BookingEntity from session if passenger ID is found.
      * 
-     * @param subject Subject
+     * @param passengerId Passenger ID
      * @return {@link BookingEntity}
      */
-    public BookingEntity getBySubject(String subject) {
+    public BookingEntity getByPassengerId(String passengerId) {
         BookingEntity bookingEntity = this.get();
-        if (bookingEntity.getSubject().equals(subject)) {
+        boolean passengerFound = bookingEntity.getPassengers().stream()
+                .anyMatch(passenger -> passenger.getId().toString().equals(passengerId));
+        if (passengerFound) {
             return bookingEntity;
         }
-        throw new BookingNotFoundException();
+        throw new BookingNotFoundException(String.format("Booking not found by passenger ID '%s'", passengerId));
     }
 
     /**
@@ -113,28 +115,16 @@ public class BookingService {
     }
 
     /**
-     * Updates the DCC status for all passengers.
-     * 
-     * @param subject       Subject
-     * @param resultRequest received result
-     * @return Number of changed passengers
-     */
-    public int updateResult(final String subject, final ResultStatusRequest resultRequest) {
-        return updateResult(subject, null, resultRequest);
-    }
-
-    /**
      * Updates the DCC status for one passenger by ID.
      * 
-     * @param subject       Subject
      * @param passengerId   passenger ID
      * @param resultRequest received result
      * @return Number of changed passengers
      */
-    public int updateResult(final String subject, final String passengerId, final ResultStatusRequest resultRequest) {
-        final BookingEntity bookingEntity = getBySubject(subject);
+    public int updateResult(final String passengerId, final ResultStatusRequest resultRequest) {
+        final BookingEntity bookingEntity = this.get();
         final List<PassengerEntity> passengerForUpdate = bookingEntity.getPassengers().stream()
-                .filter(passenger -> passengerId == null || passengerId.equals(passenger.getId().toString()))
+                .filter(passenger -> passenger.getId().toString().equals(passengerId))
                 .collect(Collectors.toList());
 
         passengerForUpdate.forEach(passenger -> {
