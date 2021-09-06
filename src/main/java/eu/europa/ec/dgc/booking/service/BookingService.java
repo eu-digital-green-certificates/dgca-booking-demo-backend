@@ -26,6 +26,7 @@ import eu.europa.ec.dgc.booking.dto.ResultStatusRequest;
 import eu.europa.ec.dgc.booking.entity.BookingEntity;
 import eu.europa.ec.dgc.booking.entity.DccStatusEntity;
 import eu.europa.ec.dgc.booking.entity.PassengerEntity;
+import eu.europa.ec.dgc.booking.exception.BookingNotFoundException;
 import eu.europa.ec.dgc.booking.exception.NotImplementedException;
 import eu.europa.ec.dgc.booking.repository.BookingRepository;
 import java.util.List;
@@ -64,6 +65,20 @@ public class BookingService {
     }
 
     /**
+     * Return current BookingEntity from session by Subject.
+     * 
+     * @param subject Subject
+     * @return {@link BookingEntity}
+     */
+    public BookingEntity getBySubject(String subject) {
+        BookingEntity bookingEntity = this.get();
+        if (bookingEntity.getSubject().equals(subject)) {
+            return bookingEntity;
+        }
+        throw new BookingNotFoundException();
+    }
+
+    /**
      * Create and write BookingEntity to session. if an entry already exists, it will be deleted.
      * 
      * @param bookingRequest data from the frontend
@@ -93,7 +108,7 @@ public class BookingService {
      * @return {@link Boolean}
      */
     public boolean existsDcc() {
-        return this.repository.get().getPassengers().stream()
+        return this.get().getPassengers().stream()
                 .allMatch(passenger -> passenger.getDccStatus() != null);
     }
 
@@ -117,7 +132,7 @@ public class BookingService {
      * @return Number of changed passengers
      */
     public int updateResult(final String subject, final String passengerId, final ResultStatusRequest resultRequest) {
-        final BookingEntity bookingEntity = this.repository.get();
+        final BookingEntity bookingEntity = getBySubject(subject);
         final List<PassengerEntity> passengerForUpdate = bookingEntity.getPassengers().stream()
                 .filter(passenger -> passengerId == null || passengerId.equals(passenger.getId().toString()))
                 .collect(Collectors.toList());

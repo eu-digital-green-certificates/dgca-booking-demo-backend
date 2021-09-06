@@ -40,7 +40,7 @@ public class BookingEntityToBookingResponseConverter implements Converter<Bookin
     public BookingResponse convert(BookingEntity entity) {
         BookingResponse response = new BookingResponse();
         response.setReference(entity.getReference());
-        response.setSubject(entity.getReference());
+        response.setSubject(entity.getSubject());
         response.setTime(entity.getTime());
         
         this.convertPassangers(entity, response);        
