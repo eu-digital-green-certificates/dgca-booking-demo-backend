@@ -29,7 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -41,6 +40,11 @@ public class ValidationController {
 
     private final BookingService bookingService;
 
+    /**
+     * Return status of the booking reference.
+     * 
+     * @return HttpStatus 200 or 204
+     */
     @Operation(summary = "Booking Route", description = "Booking Route")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
@@ -49,11 +53,10 @@ public class ValidationController {
         @ApiResponse(responseCode = "500", description = "Internal Server Error"),
         @ApiResponse(responseCode = "501", description = "Not Implemented")
     })
-    @ResponseStatus(code = HttpStatus.OK)
     @GetMapping(path = PATH_STATUS)
     public ResponseEntity<Void> validationStatus() {
         log.debug("Incoming GET request to '{}' ", PATH_STATUS);
-        if(bookingService.existsDcc()) {
+        if (bookingService.existsDcc()) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
