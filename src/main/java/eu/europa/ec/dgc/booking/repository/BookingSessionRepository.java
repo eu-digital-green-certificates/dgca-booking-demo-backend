@@ -26,9 +26,10 @@ import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@Deprecated(forRemoval = false, since = "2021-09-07")
 @Service
 @RequiredArgsConstructor
-public class BookingRepository {
+public class BookingSessionRepository {
 
     private static final String BOOKING_OBJECT_KEY = "booking";
 

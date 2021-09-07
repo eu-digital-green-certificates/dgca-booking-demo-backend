@@ -27,6 +27,7 @@ import eu.europa.ec.dgc.booking.service.BookingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -70,10 +71,12 @@ public class BookingController {
     @PostMapping(path = PATH, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public BookingResponse booking(
             @Valid @RequestBody BookingRequest booking,
-            @RequestParam(name = "setDccStatus", required = false) DevDccStatus dccStatus) {
-        log.debug("Incoming POST request to '{}' with content '{}' and optional dccStatus '{}'", PATH, booking,
-                dccStatus);
-        bookingService.create(booking, dccStatus);
-        return converter.convert(bookingService.get(), BookingResponse.class);
+            @RequestParam(name = "setDccStatus", required = false) DevDccStatus dccStatus,
+            HttpSession session) {
+        String sessionId = session.getId();
+        log.debug("Incoming POST request to '{}' with content '{}', optional dccStatus '{}' and sessionId '{}'",
+                PATH, booking, dccStatus, sessionId);
+        bookingService.create(sessionId, booking, dccStatus);
+        return converter.convert(bookingService.getBySessionId(sessionId), BookingResponse.class);
     }
 }

@@ -25,34 +25,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Getter
-@ToString
-@EqualsAndHashCode
+@Data
 public class BookingEntity {
 
-    @Setter
     private String reference;
 
-    private OffsetDateTime time;
+    private OffsetDateTime time = OffsetDateTime.now();
 
-    @Setter
     private List<PassengerEntity> passengers = new ArrayList<>();
 
-    private FlightInfoEntity flightInfo;
+    private FlightInfoEntity flightInfo = FlightInfoEntity.random();
 
     /**
      * Constructor. Set current timestamp (now) to "time". Set random "flightInfo".
      */
     public BookingEntity() {
-        this.time = OffsetDateTime.now();
-        this.flightInfo = FlightInfoEntity.random();
     }
 
     /**

@@ -1,8 +1,27 @@
 server:
   port: 8080
+
 spring:
   application:
     name: dgca-booking-demo-backend
+  datasource:
+    url: jdbc:h2:mem:bookingdemo
+    driverClassName: org.h2.Driver
+    username: sa
+    passowrd: ${random.uuid}${random.uuid}
+    #password: mXG3kgrxbedh #### onyl for developtment
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: false #### enable onyl for developtment
+      settings:
+        trace: false
+        web-allow-others: false
+
+logging:
+  level:
+    eu.europa.ec.dgc.booking: DEBUG
 
 management:
   endpoint:
@@ -17,14 +36,12 @@ management:
       exposure:
         include: info,health
 
-logging:
-  level:
-    eu.europa.ec.dgc.booking: DEBUG
-
 #### Example with default values:
 #demo:
 #  passengers:
-#    #### Number of additional passengers to be created for the booking reference
 #    generator:
+#      #### Randomly create passengers or use a list of preconfigured
+#      random: false
+#      #### Number of additional passengers to be created for the booking reference
 #      min: 0
 #      max: 2

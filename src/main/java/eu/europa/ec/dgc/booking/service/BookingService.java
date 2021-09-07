@@ -28,7 +28,6 @@ import eu.europa.ec.dgc.booking.entity.DccStatusEntity;
 import eu.europa.ec.dgc.booking.entity.PassengerEntity;
 import eu.europa.ec.dgc.booking.exception.BookingNotFoundException;
 import eu.europa.ec.dgc.booking.exception.NotImplementedException;
-import eu.europa.ec.dgc.booking.repository.BookingRepository;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -52,36 +51,31 @@ public class BookingService {
     @Value("${demo.passengers.generator.max:2}")
     private Integer passengersGeneratorMax;
 
+    // Randomly create passengers or use a list of preconfigured
     @Value("${demo.passengers.random:false}")
     private Boolean passengersRandom;
 
-    private final BookingRepository repository;
+    private final BookingPersistenceService persistence;
 
     private final ConversionService converter;
 
     /**
-     * Return current BookingEntity from session.
+     * Return BookingEntity by session ID.
      * 
      * @return {@link BookingEntity}
      */
-    public BookingEntity get() {
-        return this.repository.get();
+    public BookingEntity getBySessionId(String sessionId) {
+        return this.persistence.getBySessionId(sessionId);
     }
 
     /**
-     * Return current BookingEntity if passenger ID is found.
+     * Return BookingEntity by passenger ID.
      * 
      * @param passengerId Passenger ID
      * @return {@link BookingEntity}
      */
     public BookingEntity getByPassengerId(String passengerId) {
-        BookingEntity bookingEntity = this.get();
-        boolean passengerFound = bookingEntity.getPassengers().stream()
-                .anyMatch(passenger -> passenger.getId().toString().equals(passengerId));
-        if (passengerFound) {
-            return bookingEntity;
-        }
-        throw new BookingNotFoundException(String.format("Booking not found by passenger ID '%s'", passengerId));
+        return this.persistence.getByPassengerId(passengerId);
     }
 
     /**
@@ -102,12 +96,11 @@ public class BookingService {
     /**
      * Create and write BookingEntity to session. if an entry already exists, it will be deleted.
      * 
+     * @param sessionId      current Session ID
      * @param bookingRequest data from the frontend
      * @param dccStatus      status manipulation for test purposes
      */
-    public void create(BookingRequest bookingRequest, DevDccStatus dccStatus) {
-        repository.clean();
-
+    public void create(String sessionId, BookingRequest bookingRequest, DevDccStatus dccStatus) {
         BookingEntity bookingEntity = new BookingEntity();
         bookingEntity.setReference(bookingRequest.getBookingReference());
         bookingEntity.addPassenger(PassengerEntity.build(bookingRequest));
@@ -124,7 +117,7 @@ public class BookingService {
 
         this.updatePassengersDccStatus(dccStatus, bookingEntity);
 
-        repository.save(bookingEntity);
+        persistence.save(sessionId, bookingEntity);
     }
 
     /**
@@ -132,8 +125,8 @@ public class BookingService {
      * 
      * @return {@link Boolean}
      */
-    public boolean existsDcc() {
-        return this.get().getPassengers().stream()
+    public boolean existsDccBySessionId(String sessionId) {
+        return this.getBySessionId(sessionId).getPassengers().stream()
                 .allMatch(passenger -> passenger.getDccStatus() != null);
     }
 
@@ -145,7 +138,7 @@ public class BookingService {
      * @return Number of changed passengers
      */
     public int updateResult(final String passengerId, final ResultStatusRequest resultRequest) {
-        final BookingEntity bookingEntity = this.get();
+        final BookingEntity bookingEntity = this.getByPassengerId(passengerId);
         final List<PassengerEntity> passengerForUpdate = bookingEntity.getPassengers().stream()
                 .filter(passenger -> passenger.getId().toString().equals(passengerId))
                 .collect(Collectors.toList());
