@@ -66,7 +66,7 @@ public class BookingService {
     }
 
     /**
-     * Return current BookingEntity from session if passenger ID is found.
+     * Return current BookingEntity if passenger ID is found.
      * 
      * @param passengerId Passenger ID
      * @return {@link BookingEntity}
@@ -81,6 +81,12 @@ public class BookingService {
         throw new BookingNotFoundException(String.format("Booking not found by passenger ID '%s'", passengerId));
     }
 
+    /**
+     * Return current BookingEntity if passenger ID is found and limits the content to the passenger with the ID.
+     * 
+     * @param passengerId Passenger ID
+     * @return {@link BookingEntity}
+     */
     public BookingEntity getOnlyPassengerId(String passengerId) {
         BookingEntity bookingEntity = getByPassengerId(passengerId);
         PassengerEntity passenger = bookingEntity.getPassengerById(passengerId)

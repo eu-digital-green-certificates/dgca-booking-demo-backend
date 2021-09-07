@@ -64,6 +64,12 @@ public class BookingEntity {
         this.passengers.add(passenger);
     }
 
+    /**
+     * Delivers a passenger by ID if this exists.
+     * 
+     * @param passengerId ID as string
+     * @return {@link Optional} of {@link PassengerEntity}
+     */
     public Optional<PassengerEntity> getPassengerById(String passengerId) {
         try {
             return getPassengerById(UUID.fromString(passengerId));
@@ -73,6 +79,12 @@ public class BookingEntity {
         }
     }
 
+    /**
+     * Delivers a passenger by ID if this exists.
+     * 
+     * @param passengerId ID as UUID
+     * @return {@link Optional} of {@link PassengerEntity}
+     */
     public Optional<PassengerEntity> getPassengerById(UUID passengerId) {
         return this.passengers.stream()
         .filter(passenger -> passenger.getId().equals(passengerId))
