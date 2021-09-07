@@ -21,10 +21,11 @@
 package eu.europa.ec.dgc.booking.converter;
 
 import eu.europa.ec.dgc.booking.dto.BoardingPassDto;
+import eu.europa.ec.dgc.booking.dto.FlightInfoDto;
 import eu.europa.ec.dgc.booking.entity.BookingEntity;
+import eu.europa.ec.dgc.booking.entity.FlightInfoEntity;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 @Service
 public class BookingEntityToBoardingPassDtoConverter implements Converter<BookingEntity, BoardingPassDto> {
@@ -33,10 +34,18 @@ public class BookingEntityToBoardingPassDtoConverter implements Converter<Bookin
     public BoardingPassDto convert(BookingEntity entity) {
         BoardingPassDto dto = new BoardingPassDto();
         dto.setReference(entity.getReference());
-        entity.getPassengers().stream()
-                .filter(passenger -> passenger.getDccStatus() != null)
-                .filter(passenger -> StringUtils.hasText(passenger.getDccStatus().getConfirmation()))
-                .forEach(passenger -> dto.getConfirmations().add(passenger.getDccStatus().getConfirmation()));
+        dto.setFlightInfo(convertFlightInfo(entity.getFlightInfo()));
+        if (!entity.getPassengers().isEmpty() && entity.getPassengers().get(0).getDccStatus() != null) {
+            dto.setConfirmations(entity.getPassengers().get(0).getDccStatus().getConfirmation());
+        }
+        return dto;
+    }
+
+    private FlightInfoDto convertFlightInfo(FlightInfoEntity entity) {
+        FlightInfoDto dto = new FlightInfoDto();
+        dto.setFrom(entity.getFrom());
+        dto.setTo(entity.getTo());
+        dto.setTime(entity.getTime());
         return dto;
     }
 }

@@ -23,11 +23,15 @@ package eu.europa.ec.dgc.booking.entity;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Getter
 @ToString
 @EqualsAndHashCode
@@ -38,6 +42,7 @@ public class BookingEntity {
 
     private OffsetDateTime time;
 
+    @Setter
     private List<PassengerEntity> passengers = new ArrayList<>();
 
     private FlightInfoEntity flightInfo;
@@ -57,5 +62,20 @@ public class BookingEntity {
      */
     public void addPassenger(PassengerEntity passenger) {
         this.passengers.add(passenger);
+    }
+
+    public Optional<PassengerEntity> getPassengerById(String passengerId) {
+        try {
+            return getPassengerById(UUID.fromString(passengerId));
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage(), e);
+            return Optional.empty();
+        }
+    }
+
+    public Optional<PassengerEntity> getPassengerById(UUID passengerId) {
+        return this.passengers.stream()
+        .filter(passenger -> passenger.getId().equals(passengerId))
+                .findAny();
     }
 }

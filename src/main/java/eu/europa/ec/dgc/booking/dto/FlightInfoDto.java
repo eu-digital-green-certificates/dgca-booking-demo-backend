@@ -20,14 +20,15 @@
 
 package eu.europa.ec.dgc.booking.dto;
 
+import java.time.OffsetDateTime;
 import lombok.Data;
 
 @Data
-public class BoardingPassDto {
+public class FlightInfoDto {
 
-    private String reference;
+    private String from;
 
-    private String confirmations;
+    private String to;
 
-    private FlightInfoDto flightInfo;
+    private OffsetDateTime time;
 }

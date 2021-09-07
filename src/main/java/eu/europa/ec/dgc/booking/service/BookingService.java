@@ -29,6 +29,7 @@ import eu.europa.ec.dgc.booking.entity.PassengerEntity;
 import eu.europa.ec.dgc.booking.exception.BookingNotFoundException;
 import eu.europa.ec.dgc.booking.exception.NotImplementedException;
 import eu.europa.ec.dgc.booking.repository.BookingRepository;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -78,6 +79,15 @@ public class BookingService {
             return bookingEntity;
         }
         throw new BookingNotFoundException(String.format("Booking not found by passenger ID '%s'", passengerId));
+    }
+
+    public BookingEntity getOnlyPassengerId(String passengerId) {
+        BookingEntity bookingEntity = getByPassengerId(passengerId);
+        PassengerEntity passenger = bookingEntity.getPassengerById(passengerId)
+                .orElseThrow(() -> new BookingNotFoundException(
+                        String.format("Booking not found by passenger ID '%s'", passengerId)));
+        bookingEntity.setPassengers(Arrays.asList(passenger));
+        return bookingEntity;
     }
 
     /**
