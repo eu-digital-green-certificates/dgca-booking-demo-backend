@@ -46,7 +46,7 @@ public class BookingResponse {
 
         private String lastname;
 
-        private BookingPassengerDccStatusResponse dssStatus;
+        private BookingPassengerDccStatusResponse dccStatus;
     }
 
     @Data

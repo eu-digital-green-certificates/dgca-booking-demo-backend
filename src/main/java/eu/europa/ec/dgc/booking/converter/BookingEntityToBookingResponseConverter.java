@@ -81,7 +81,7 @@ public class BookingEntityToBookingResponseConverter implements Converter<Bookin
                     return resultResponse;
                 }).collect(Collectors.toList());
         dccStatusResponse.setResults(results);
-        passengerResponse.setDssStatus(dccStatusResponse);
+        passengerResponse.setDccStatus(dccStatusResponse);
     }
 
     private void convertFlightInfo(BookingEntity entity, BookingResponse response) {
