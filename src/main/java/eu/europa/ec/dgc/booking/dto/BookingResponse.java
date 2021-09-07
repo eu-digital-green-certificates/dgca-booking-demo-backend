@@ -20,6 +20,7 @@
 
 package eu.europa.ec.dgc.booking.dto;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,8 @@ public class BookingResponse {
         private String forename;
 
         private String lastname;
+
+        private LocalDate birthDate;
 
         private BookingPassengerDccStatusResponse dccStatus;
     }

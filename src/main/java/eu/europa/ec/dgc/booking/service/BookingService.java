@@ -52,6 +52,9 @@ public class BookingService {
     @Value("${demo.passengers.generator.max:2}")
     private Integer passengersGeneratorMax;
 
+    @Value("${demo.passengers.random:false}")
+    private Boolean passengersRandom;
+
     private final BookingRepository repository;
 
     private final ConversionService converter;
@@ -112,7 +115,11 @@ public class BookingService {
         int passengersMin = dccStatus == DevDccStatus.MIX ? 1 : passengersGeneratorMin;
         Integer numberToGenerate = new Random().nextInt(passengersGeneratorMax - passengersMin) + passengersMin;
         for (int i = 0; i < numberToGenerate; i++) {
-            bookingEntity.addPassenger(PassengerEntity.random());
+            if (passengersRandom) {
+                bookingEntity.addPassenger(PassengerEntity.random());
+            } else {
+                bookingEntity.addPassenger(PassengerEntity.immutable(i));
+            }
         }
 
         this.updatePassengersDccStatus(dccStatus, bookingEntity);

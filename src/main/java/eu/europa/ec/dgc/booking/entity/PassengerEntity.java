@@ -22,6 +22,7 @@ package eu.europa.ec.dgc.booking.entity;
 
 import com.github.javafaker.Faker;
 import eu.europa.ec.dgc.booking.dto.BookingRequest;
+import java.time.LocalDate;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -33,13 +34,16 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class PassengerEntity {
 
-    private final UUID id;
+    private UUID id;
 
     @Setter
     private String forename;
 
     @Setter
     private String lastname;
+
+    @Setter
+    private LocalDate birthDate;
 
     @Setter
     private DccStatusEntity dccStatus;
@@ -56,8 +60,12 @@ public class PassengerEntity {
      */
     public static PassengerEntity build(BookingRequest bookingRequest) {
         PassengerEntity passengerData = new PassengerEntity();
+        if (bookingRequest.getId() != null) {
+            passengerData.id = bookingRequest.getId();
+        }
         passengerData.setForename(bookingRequest.getForename());
         passengerData.setLastname(bookingRequest.getLastname());
+        passengerData.setBirthDate(bookingRequest.getBirthDate());
         return passengerData;
     }
 
@@ -73,5 +81,34 @@ public class PassengerEntity {
         passengerData.setForename(faker.name().firstName());
         passengerData.setLastname(faker.name().lastName());
         return passengerData;
+    }
+
+    /**
+     * Always creates the same passenger based on the pos. Pos 0-2 are possible.
+     * 
+     * @param pos supports 0-2
+     * @return {@link PassengerEntity}
+     */
+    public static PassengerEntity immutable(int pos) {
+        PassengerEntity entity = new PassengerEntity();
+        if (pos == 0) {
+            entity.id = UUID.fromString("6751B6A6-A31D-44DA-9C0F-ECCCF4F19338");
+            entity.setForename("Lionel");
+            entity.setLastname("Kuhic");
+            entity.setBirthDate(LocalDate.of(1994, 5, 25));
+        } else if (pos == 1) {
+            entity.id = UUID.fromString("B67F6578-08D9-4254-BCB8-4936053865C6");
+            entity.setForename("Fidel");
+            entity.setLastname("Lang");
+            entity.setBirthDate(LocalDate.of(1978, 8, 14));
+        } else if (pos == 2) {
+            entity.id = UUID.fromString("CB992C09-48EC-4C5B-9303-C2DC06E7496D");
+            entity.setForename("Demetria");
+            entity.setLastname("Hagenes");
+            entity.setBirthDate(LocalDate.of(2002, 4, 25));
+        } else {
+            throw new IllegalArgumentException(String.format("Unsupported pos '%s'", pos));
+        }
+        return entity;
     }
 }

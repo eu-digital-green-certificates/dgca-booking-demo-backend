@@ -53,6 +53,7 @@ public class BookingEntityToBookingResponseConverter implements Converter<Bookin
             passengerResponse.setId(passengerEntity.getId());
             passengerResponse.setForename(passengerEntity.getForename());
             passengerResponse.setLastname(passengerEntity.getLastname());
+            passengerResponse.setBirthDate(passengerEntity.getBirthDate());
             
             DccStatusEntity dccStatusEntity = passengerEntity.getDccStatus();
             if (dccStatusEntity != null) {
