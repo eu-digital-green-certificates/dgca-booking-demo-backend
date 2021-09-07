@@ -20,14 +20,20 @@
 
 package eu.europa.ec.dgc.booking.dto;
 
+import java.time.LocalDate;
+import java.util.UUID;
 import lombok.Data;
 
 @Data
 public class BookingRequest {
 
+    private UUID id;
+
     private String forename;
     
     private String lastname;
     
+    private LocalDate birthDate;
+
     private String bookingReference;
 }

@@ -58,6 +58,6 @@ public class TokenController {
     @GetMapping(path = PATH, produces = MediaType.APPLICATION_JSON_VALUE)
     public BookingResponse tokencontent(@PathVariable(value = "subject", required = true) final String passengerId) {
         log.debug("Incoming GET request to '{}' with passenger ID '{}'", PATH, passengerId);
-        return converter.convert(bookingService.getByPassengerId(passengerId), BookingResponse.class);
+        return converter.convert(bookingService.getOnlyPassengerId(passengerId), BookingResponse.class);
     }
 }

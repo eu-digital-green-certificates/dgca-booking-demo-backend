@@ -53,6 +53,7 @@ public class BookingEntityToBookingResponseConverter implements Converter<Bookin
             passengerResponse.setId(passengerEntity.getId());
             passengerResponse.setForename(passengerEntity.getForename());
             passengerResponse.setLastname(passengerEntity.getLastname());
+            passengerResponse.setBirthDate(passengerEntity.getBirthDate());
             
             DccStatusEntity dccStatusEntity = passengerEntity.getDccStatus();
             if (dccStatusEntity != null) {
@@ -81,7 +82,7 @@ public class BookingEntityToBookingResponseConverter implements Converter<Bookin
                     return resultResponse;
                 }).collect(Collectors.toList());
         dccStatusResponse.setResults(results);
-        passengerResponse.setDssStatus(dccStatusResponse);
+        passengerResponse.setDccStatus(dccStatusResponse);
     }
 
     private void convertFlightInfo(BookingEntity entity, BookingResponse response) {

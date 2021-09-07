@@ -18,16 +18,26 @@
  * ---license-end
  */
 
-package eu.europa.ec.dgc.booking.dto;
+package eu.europa.ec.dgc.booking.entity;
 
+import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Data;
+import org.hibernate.annotations.Type;
 
+@Entity
+@Table(name = "passengers")
 @Data
-public class BoardingPassDto {
+public class PassengersH2Entity {
 
-    private String reference;
+    @Id
+    @Type(type = "uuid-char")
+    @Column(name = "passenger_id", columnDefinition = "char(36)", nullable = false, updatable = false)
+    private UUID id;
 
-    private String confirmations;
-
-    private FlightInfoDto flightInfo;
+    @Column(name = "session_id", columnDefinition = "varchar(255)", nullable = false, updatable = false)
+    private String sessionId;
 }

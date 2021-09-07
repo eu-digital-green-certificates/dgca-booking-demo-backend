@@ -23,31 +23,27 @@ package eu.europa.ec.dgc.booking.entity;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import java.util.Optional;
+import java.util.UUID;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
-@Getter
-@ToString
-@EqualsAndHashCode
+@Slf4j
+@Data
 public class BookingEntity {
 
-    @Setter
     private String reference;
 
-    private OffsetDateTime time;
+    private OffsetDateTime time = OffsetDateTime.now();
 
     private List<PassengerEntity> passengers = new ArrayList<>();
 
-    private FlightInfoEntity flightInfo;
+    private FlightInfoEntity flightInfo = FlightInfoEntity.random();
 
     /**
      * Constructor. Set current timestamp (now) to "time". Set random "flightInfo".
      */
     public BookingEntity() {
-        this.time = OffsetDateTime.now();
-        this.flightInfo = FlightInfoEntity.random();
     }
 
     /**
@@ -57,5 +53,32 @@ public class BookingEntity {
      */
     public void addPassenger(PassengerEntity passenger) {
         this.passengers.add(passenger);
+    }
+
+    /**
+     * Delivers a passenger by ID if this exists.
+     * 
+     * @param passengerId ID as string
+     * @return {@link Optional} of {@link PassengerEntity}
+     */
+    public Optional<PassengerEntity> getPassengerById(String passengerId) {
+        try {
+            return getPassengerById(UUID.fromString(passengerId));
+        } catch (IllegalArgumentException e) {
+            log.error(e.getMessage(), e);
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Delivers a passenger by ID if this exists.
+     * 
+     * @param passengerId ID as UUID
+     * @return {@link Optional} of {@link PassengerEntity}
+     */
+    public Optional<PassengerEntity> getPassengerById(UUID passengerId) {
+        return this.passengers.stream()
+        .filter(passenger -> passenger.getId().equals(passengerId))
+                .findAny();
     }
 }

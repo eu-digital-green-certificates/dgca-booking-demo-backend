@@ -24,6 +24,7 @@ import eu.europa.ec.dgc.booking.service.BookingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -54,9 +55,10 @@ public class ValidationController {
         @ApiResponse(responseCode = "501", description = "Not Implemented")
     })
     @GetMapping(path = PATH_STATUS)
-    public ResponseEntity<Void> validationStatus() {
-        log.debug("Incoming GET request to '{}' ", PATH_STATUS);
-        if (bookingService.existsDcc()) {
+    public ResponseEntity<Void> validationStatus(final HttpSession session) {
+        final String sessionId = session.getId();
+        log.debug("Incoming GET request to '{}' with session ID '{}'", PATH_STATUS, sessionId);
+        if (bookingService.existsDccBySessionId(sessionId)) {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

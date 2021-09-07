@@ -20,23 +20,29 @@
 
 package eu.europa.ec.dgc.booking.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.javafaker.Faker;
 import java.time.OffsetDateTime;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.extern.jackson.Jacksonized;
 
 @Builder
 @Getter
 @ToString
 @EqualsAndHashCode
+@Jacksonized
 public class FlightInfoEntity {
 
+    @JsonProperty("from")
     private String from;
 
+    @JsonProperty("to")
     private String to;
 
+    @JsonProperty("time")
     private OffsetDateTime time;
 
     /**

@@ -22,7 +22,9 @@ package eu.europa.ec.dgc.booking.entity;
 
 import lombok.Builder;
 import lombok.Value;
+import lombok.extern.jackson.Jacksonized;
 
+@Jacksonized
 @Builder
 @Value
 public class DccStatusResultEntity {

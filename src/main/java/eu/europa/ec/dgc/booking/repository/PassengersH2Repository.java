@@ -18,16 +18,17 @@
  * ---license-end
  */
 
-package eu.europa.ec.dgc.booking.dto;
+package eu.europa.ec.dgc.booking.repository;
 
-import lombok.Data;
+import eu.europa.ec.dgc.booking.entity.PassengersH2Entity;
+import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-@Data
-public class BoardingPassDto {
+@Repository
+public interface PassengersH2Repository extends JpaRepository<PassengersH2Entity, UUID> {
 
-    private String reference;
+    void deleteAllBySessionId(String sessionId);
 
-    private String confirmations;
-
-    private FlightInfoDto flightInfo;
+    boolean existsBySessionId(String sessionId);
 }

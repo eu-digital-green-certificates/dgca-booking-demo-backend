@@ -18,16 +18,23 @@
  * ---license-end
  */
 
-package eu.europa.ec.dgc.booking.dto;
+package eu.europa.ec.dgc.booking.entity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.Data;
 
+@Entity
+@Table(name = "bookings")
 @Data
-public class BoardingPassDto {
+public class BookingH2Entity {
 
-    private String reference;
+    @Id
+    @Column(name = "session_id", columnDefinition = "varchar(255)", nullable = false, updatable = false)
+    private String sessionId;
 
-    private String confirmations;
-
-    private FlightInfoDto flightInfo;
+    @Column(name = "booking", columnDefinition = "varchar(2147483647)")
+    private String bookingJson;
 }

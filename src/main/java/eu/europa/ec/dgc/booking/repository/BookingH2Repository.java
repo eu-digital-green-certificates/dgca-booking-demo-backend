@@ -18,16 +18,12 @@
  * ---license-end
  */
 
-package eu.europa.ec.dgc.booking.dto;
+package eu.europa.ec.dgc.booking.repository;
 
-import lombok.Data;
+import eu.europa.ec.dgc.booking.entity.BookingH2Entity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-@Data
-public class BoardingPassDto {
-
-    private String reference;
-
-    private String confirmations;
-
-    private FlightInfoDto flightInfo;
+@Repository
+public interface BookingH2Repository extends JpaRepository<BookingH2Entity, String> {
 }
