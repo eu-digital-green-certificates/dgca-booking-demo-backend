@@ -1,0 +1,12 @@
+server {
+    listen 80;
+    server_tokens off;
+    location / {
+        root /usr/share/nginx/html;
+        index unresolvable-file-html.html;
+    }
+    location /booking/ {
+        proxy_ssl_server_name on;
+        proxy_pass http://localhost/booking;
+    }
+}
