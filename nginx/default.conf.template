@@ -7,6 +7,6 @@ server {
     }
     location /booking/ {
         proxy_ssl_server_name on;
-        proxy_pass http://localhost/booking;
+        proxy_pass http://localhost:8080/booking;
     }
 }
