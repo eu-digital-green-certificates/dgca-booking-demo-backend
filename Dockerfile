@@ -4,7 +4,7 @@ WORKDIR /app
 
 FROM nginx:alpine
 COPY --from=build ./app /app
-COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
+COPY nginx/default.conf.template /etc/nginx/conf.d/default.conf
 RUN apk --no-cache add openjdk11-jre 
 
 EXPOSE 80
