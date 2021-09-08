@@ -6,6 +6,6 @@ FROM nginx:alpine
 COPY --from=build ./app /app
 COPY nginx/default.conf.template /etc/nginx/conf.d/default.conf
 RUN apk --no-cache add openjdk11-jre 
-CMD [  "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar ./app/app.jar" ]
+CMD  sh -c "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar ./app/app.jar" 
 EXPOSE 80
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
