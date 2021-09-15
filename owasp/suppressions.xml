@@ -32,4 +32,8 @@
     <!-- snakeyaml-1.23-android.jar (pkg:maven/org.yaml/snakeyaml@1.23, cpe:2.3:a:snakeyaml_project:snakeyaml:1.23:*:*:*:*:*:*:*) : CVE-2017-18640 -->
     <cve>CVE-2017-18640</cve>
   </suppress>
+  <suppress>
+    <!-- tomcat-embed-core-9.0.52.jar : CVE-2020-0822-->
+	<cve>CVE-2020-0822</cve>
+  </suppress>
 </suppressions>
