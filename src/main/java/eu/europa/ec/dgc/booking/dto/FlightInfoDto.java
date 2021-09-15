@@ -20,6 +20,7 @@
 
 package eu.europa.ec.dgc.booking.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 import lombok.Data;
 
@@ -31,4 +32,22 @@ public class FlightInfoDto {
     private String to;
 
     private OffsetDateTime time;
+    
+    @JsonProperty("coa")
+    private String countryOfArrival;
+
+    @JsonProperty("cod")
+    private String countryOfDeparture;
+
+    @JsonProperty("roa")
+    private String regionOfArrival;
+
+    @JsonProperty("rod")
+    private String regionOfDeparture;
+
+    @JsonProperty("departureTime")
+    private OffsetDateTime departureTime;
+
+    @JsonProperty("arrivalTime")
+    private OffsetDateTime arrivalTime;
 }
