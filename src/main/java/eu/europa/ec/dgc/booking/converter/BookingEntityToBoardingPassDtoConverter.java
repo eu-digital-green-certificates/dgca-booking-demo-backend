@@ -31,8 +31,8 @@ import org.springframework.stereotype.Service;
 public class BookingEntityToBoardingPassDtoConverter implements Converter<BookingEntity, BoardingPassDto> {
 
     @Override
-    public BoardingPassDto convert(BookingEntity entity) {
-        BoardingPassDto dto = new BoardingPassDto();
+    public BoardingPassDto convert(final BookingEntity entity) {
+        final BoardingPassDto dto = new BoardingPassDto();
         dto.setReference(entity.getReference());
         dto.setFlightInfo(convertFlightInfo(entity.getFlightInfo()));
         if (!entity.getPassengers().isEmpty() && entity.getPassengers().get(0).getDccStatus() != null) {
@@ -41,11 +41,17 @@ public class BookingEntityToBoardingPassDtoConverter implements Converter<Bookin
         return dto;
     }
 
-    private FlightInfoDto convertFlightInfo(FlightInfoEntity entity) {
-        FlightInfoDto dto = new FlightInfoDto();
+    private FlightInfoDto convertFlightInfo(final FlightInfoEntity entity) {
+        final FlightInfoDto dto = new FlightInfoDto();
         dto.setFrom(entity.getFrom());
         dto.setTo(entity.getTo());
         dto.setTime(entity.getTime());
+        dto.setCountryOfArrival(entity.getCountryOfArrival());
+        dto.setCountryOfDeparture(entity.getCountryOfDeparture());
+        dto.setRegionOfArrival(entity.getRegionOfArrival());
+        dto.setRegionOfDeparture(entity.getRegionOfDeparture());
+        dto.setDepartureTime(entity.getDepartureTime());
+        dto.setArrivalTime(entity.getArrivalTime());
         return dto;
     }
 }

@@ -21,6 +21,7 @@
 package eu.europa.ec.dgc.booking.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.javafaker.Address;
 import com.github.javafaker.Faker;
 import java.time.OffsetDateTime;
 import lombok.Builder;
@@ -44,6 +45,24 @@ public class FlightInfoEntity {
 
     @JsonProperty("time")
     private OffsetDateTime time;
+    
+    @JsonProperty("coa")
+    private String countryOfArrival;
+    
+    @JsonProperty("cod")
+    private String countryOfDeparture;
+    
+    // Region of Arrival ISO 3166-2 without Country
+    @JsonProperty("roa")
+    private String regionOfArrival;
+    
+    // Region of Departure ISO 3166-2 without Country
+    @JsonProperty("rod")
+    private String regionOfDeparture;
+        
+    private OffsetDateTime departureTime;
+    
+    private OffsetDateTime arrivalTime;
 
     /**
      * Create a random FlightInfoEntity that is 2 days in the future.
@@ -51,12 +70,26 @@ public class FlightInfoEntity {
      * @return {@link FlightInfoEntity}
      */
     public static FlightInfoEntity random() {
-        Faker faker = new Faker();
-
+        final Address departure = new Faker().address();
+        final String countryOfDeparture = departure.countryCode();
+        final String from = departure.cityName();
+        
+        final Address arrival = new Faker().address();
+        final String countryOfArrival = arrival.countryCode();
+        final String to = arrival.cityName();
+        
+        final OffsetDateTime now = OffsetDateTime.now();
+        final OffsetDateTime departureTime = now.plusDays(1);
         return FlightInfoEntity.builder()
-                .from(faker.address().cityName())
-                .to(faker.address().cityName())
-                .time(OffsetDateTime.now().plusDays(2))
+                .from(from)
+                .countryOfDeparture(countryOfDeparture)
+                .regionOfDeparture(countryOfDeparture)
+                .to(to)
+                .countryOfArrival(countryOfArrival)
+                .regionOfArrival(countryOfArrival)
+                .departureTime(departureTime)
+                .arrivalTime(departureTime.plusHours(8).plusMinutes(24))
+                .time(departureTime)
                 .build();
     }
 }

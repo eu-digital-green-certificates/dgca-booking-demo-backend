@@ -52,7 +52,7 @@ public class BookingController {
     private final ConversionService converter;
 
     /**
-     * Create new Bookiong in Session.
+     * Create new Booking in Session.
      * 
      * @param booking   Data that will be created
      * @param dccStatus Dev mode, changing status.

@@ -90,6 +90,12 @@ public class BookingEntityToBookingResponseConverter implements Converter<Bookin
         flightInfoResponse.setFrom(entity.getFlightInfo().getFrom());
         flightInfoResponse.setTo(entity.getFlightInfo().getTo());
         flightInfoResponse.setTime(entity.getFlightInfo().getTime());
+        flightInfoResponse.setCountryOfArrival(entity.getFlightInfo().getCountryOfArrival());
+        flightInfoResponse.setCountryOfDeparture(entity.getFlightInfo().getCountryOfDeparture());
+        flightInfoResponse.setRegionOfArrival(entity.getFlightInfo().getRegionOfArrival());
+        flightInfoResponse.setRegionOfDeparture(entity.getFlightInfo().getRegionOfDeparture());
+        flightInfoResponse.setDepartureTime(entity.getFlightInfo().getDepartureTime());
+        flightInfoResponse.setArrivalTime(entity.getFlightInfo().getArrivalTime());
         response.setFlightInfo(flightInfoResponse);
     }
 }
