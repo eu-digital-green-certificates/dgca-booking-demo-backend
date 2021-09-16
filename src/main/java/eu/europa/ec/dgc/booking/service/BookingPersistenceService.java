@@ -77,10 +77,22 @@ public class BookingPersistenceService {
         return this.getBySessionId(sessionId);
     }
 
+    /**
+     * Returns SessionID by passenger ID.
+     * 
+     * @param passengerId {@link String}
+     * @return Session ID
+     */
     public String getSessionIdByPassengerId(final String passengerId) {
         return getSessionIdByPassengerId(UUID.fromString(passengerId));
     }
-    
+
+    /**
+     * Returns SessionID by passenger ID.
+     * 
+     * @param passengerId {@link UUID}
+     * @return Session ID
+     */
     public String getSessionIdByPassengerId(final UUID passengerId) {
         final PassengersH2Entity entity = passengersRepository.findById(passengerId)
                 .orElseThrow(() -> new BookingNotFoundException(

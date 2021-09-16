@@ -90,12 +90,12 @@ public class BookingService {
         final PassengerEntity passenger = bookingEntity.getPassengerById(passengerId)
                 .orElseThrow(() -> new BookingNotFoundException(
                         String.format("Booking not found by passenger ID '%s'", passengerId)));
-        
-        if(serviceId != null && !serviceId.isBlank()) {
+
+        if (serviceId != null && !serviceId.isBlank()) {
             passenger.setServiceIdUsed(serviceId);
-            this.persistence.save(this.persistence.getSessionIdByPassengerId(passengerId), bookingEntity);    
+            this.persistence.save(this.persistence.getSessionIdByPassengerId(passengerId), bookingEntity);
         }
-        
+
         bookingEntity.setPassengers(Arrays.asList(passenger));
         return bookingEntity;
     }
@@ -103,9 +103,9 @@ public class BookingService {
     /**
      * Create and write BookingEntity to session. if an entry already exists, it will be deleted.
      * 
-     * @param sessionId      current Session ID
+     * @param sessionId current Session ID
      * @param bookingRequest data from the frontend
-     * @param dccStatus      status manipulation for test purposes
+     * @param dccStatus status manipulation for test purposes
      */
     public void create(String sessionId, BookingRequest bookingRequest, DevDccStatus dccStatus) {
         BookingEntity bookingEntity = new BookingEntity();
@@ -140,7 +140,7 @@ public class BookingService {
     /**
      * Updates the DCC status for one passenger by ID.
      * 
-     * @param passengerId   passenger ID
+     * @param passengerId passenger ID
      * @param resultRequest received result
      * @return Number of changed passengers
      */

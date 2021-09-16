@@ -47,6 +47,13 @@ public class TokenController {
 
     private final ConversionService converter;
 
+    /**
+     * Information about the passenger and other general information.
+     * 
+     * @param passengerId Subject ID
+     * @param serviceId Service ID that was used
+     * @return {@link BookingResponse}
+     */
     @Operation(summary = "Token Route (private)", description = "Token Route (private)")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
@@ -60,7 +67,8 @@ public class TokenController {
     public BookingResponse tokencontent(
             @PathVariable(value = "subject", required = true) final String passengerId,
             @RequestParam(value = "service", required = false) final String serviceId) {
-        log.debug("Incoming GET request to '{}' with passenger ID '{}' and service ID '{}'", PATH, passengerId, serviceId);
+        log.debug("Incoming GET request to '{}' with passenger ID '{}' and service ID '{}'",
+                PATH, passengerId, serviceId);
         return converter.convert(bookingService.getOnlyPassengerId(passengerId, serviceId), BookingResponse.class);
     }
 }
