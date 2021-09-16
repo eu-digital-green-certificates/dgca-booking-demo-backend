@@ -61,9 +61,9 @@ public class BookingEntity {
      * @param passengerId ID as string
      * @return {@link Optional} of {@link PassengerEntity}
      */
-    public Optional<PassengerEntity> getPassengerById(String passengerId) {
+    public Optional<PassengerEntity> getPassengerById(final String passengerId) {
         try {
-            return getPassengerById(UUID.fromString(passengerId));
+            return this.getPassengerById(UUID.fromString(passengerId));
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage(), e);
             return Optional.empty();
@@ -76,9 +76,9 @@ public class BookingEntity {
      * @param passengerId ID as UUID
      * @return {@link Optional} of {@link PassengerEntity}
      */
-    public Optional<PassengerEntity> getPassengerById(UUID passengerId) {
+    public Optional<PassengerEntity> getPassengerById(final UUID passengerId) {
         return this.passengers.stream()
-        .filter(passenger -> passenger.getId().equals(passengerId))
+                .filter(passenger -> passenger.getId().equals(passengerId))
                 .findAny();
     }
 }

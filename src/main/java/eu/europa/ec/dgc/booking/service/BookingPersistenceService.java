@@ -72,18 +72,39 @@ public class BookingPersistenceService {
      * @param passengerId Passenger ID as UUID
      * @return {@link BookingEntity}
      */
-    public BookingEntity getByPassengerId(UUID passengerId) {
-        PassengersH2Entity entity = passengersRepository.findById(passengerId)
+    public BookingEntity getByPassengerId(final UUID passengerId) {
+        final String sessionId = getSessionIdByPassengerId(passengerId);
+        return this.getBySessionId(sessionId);
+    }
+
+    /**
+     * Returns SessionID by passenger ID.
+     * 
+     * @param passengerId {@link String}
+     * @return Session ID
+     */
+    public String getSessionIdByPassengerId(final String passengerId) {
+        return getSessionIdByPassengerId(UUID.fromString(passengerId));
+    }
+
+    /**
+     * Returns SessionID by passenger ID.
+     * 
+     * @param passengerId {@link UUID}
+     * @return Session ID
+     */
+    public String getSessionIdByPassengerId(final UUID passengerId) {
+        final PassengersH2Entity entity = passengersRepository.findById(passengerId)
                 .orElseThrow(() -> new BookingNotFoundException(
                         String.format("Booking not found by passenger ID '%s'", passengerId)));
-        return this.getBySessionId(entity.getSessionId());
+        return entity.getSessionId();
     }
 
     /**
      * Saves booking , if entries already exist, they will be deleted.
      * 
      * @param sessionId Session ID
-     * @param booking   Booking
+     * @param booking Booking
      */
     public void save(String sessionId, BookingEntity booking) {
         this.cleanBySessionId(sessionId);
