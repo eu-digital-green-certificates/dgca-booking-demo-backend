@@ -32,6 +32,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -56,8 +57,10 @@ public class TokenController {
     })
     @ResponseStatus(code = HttpStatus.OK)
     @GetMapping(path = PATH, produces = MediaType.APPLICATION_JSON_VALUE)
-    public BookingResponse tokencontent(@PathVariable(value = "subject", required = true) final String passengerId) {
-        log.debug("Incoming GET request to '{}' with passenger ID '{}'", PATH, passengerId);
-        return converter.convert(bookingService.getOnlyPassengerId(passengerId), BookingResponse.class);
+    public BookingResponse tokencontent(
+            @PathVariable(value = "subject", required = true) final String passengerId,
+            @RequestParam(value = "service", required = false) final String serviceId) {
+        log.debug("Incoming GET request to '{}' with passenger ID '{}' and service ID '{}'", PATH, passengerId, serviceId);
+        return converter.convert(bookingService.getOnlyPassengerId(passengerId, serviceId), BookingResponse.class);
     }
 }

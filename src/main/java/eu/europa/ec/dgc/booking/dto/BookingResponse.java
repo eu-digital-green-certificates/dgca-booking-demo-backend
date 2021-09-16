@@ -51,6 +51,8 @@ public class BookingResponse {
         private LocalDate birthDate;
 
         private BookingPassengerDccStatusResponse dccStatus;
+        
+        private String serviceIdUsed;
     }
 
     @Data

@@ -82,13 +82,20 @@ public class BookingService {
      * Return current BookingEntity if passenger ID is found and limits the content to the passenger with the ID.
      * 
      * @param passengerId Passenger ID
+     * @param serviceId Service ID (optional)
      * @return {@link BookingEntity}
      */
-    public BookingEntity getOnlyPassengerId(String passengerId) {
-        BookingEntity bookingEntity = getByPassengerId(passengerId);
-        PassengerEntity passenger = bookingEntity.getPassengerById(passengerId)
+    public BookingEntity getOnlyPassengerId(final String passengerId, final String serviceId) {
+        final BookingEntity bookingEntity = this.getByPassengerId(passengerId);
+        final PassengerEntity passenger = bookingEntity.getPassengerById(passengerId)
                 .orElseThrow(() -> new BookingNotFoundException(
                         String.format("Booking not found by passenger ID '%s'", passengerId)));
+        
+        if(serviceId != null && !serviceId.isBlank()) {
+            passenger.setServiceIdUsed(serviceId);
+            this.persistence.save(this.persistence.getSessionIdByPassengerId(passengerId), bookingEntity);    
+        }
+        
         bookingEntity.setPassengers(Arrays.asList(passenger));
         return bookingEntity;
     }

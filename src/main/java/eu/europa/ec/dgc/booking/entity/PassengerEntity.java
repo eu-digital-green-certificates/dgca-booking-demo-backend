@@ -47,6 +47,10 @@ public class PassengerEntity {
 
     @Setter
     private DccStatusEntity dccStatus;
+    
+    // service id that was used for the token
+    @Setter
+    private String serviceIdUsed;
 
     public PassengerEntity() {
         this.id = UUID.randomUUID();
