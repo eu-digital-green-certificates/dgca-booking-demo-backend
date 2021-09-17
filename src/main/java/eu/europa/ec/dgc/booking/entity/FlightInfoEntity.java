@@ -24,6 +24,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.github.javafaker.Address;
 import com.github.javafaker.Faker;
 import java.time.OffsetDateTime;
+import java.util.Arrays;
+import java.util.List;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -63,6 +65,23 @@ public class FlightInfoEntity {
     private OffsetDateTime departureTime;
     
     private OffsetDateTime arrivalTime;
+    
+    // demo: static value
+    @Builder.Default
+    private int type = 2;
+    
+    // demo: static value
+    @Builder.Default
+    private List<String> categories = Arrays.asList("Standard");
+    
+    // demo: static value
+    @JsonProperty("lang")
+    @Builder.Default
+    private String language = "en-en";
+   
+    // demo: static value
+    @Builder.Default
+    private List<String> conditionTypes = Arrays.asList("r", "v", "t");
 
     /**
      * Create a random FlightInfoEntity that is 2 days in the future.

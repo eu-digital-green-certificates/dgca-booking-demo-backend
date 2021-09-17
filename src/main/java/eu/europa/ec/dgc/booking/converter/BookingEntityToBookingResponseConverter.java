@@ -20,7 +20,6 @@
 
 package eu.europa.ec.dgc.booking.converter;
 
-
 import eu.europa.ec.dgc.booking.dto.BookingResponse;
 import eu.europa.ec.dgc.booking.dto.BookingResponse.BookingFlightInfoResponse;
 import eu.europa.ec.dgc.booking.dto.BookingResponse.BookingPassengerDccStatusResponse;
@@ -28,6 +27,7 @@ import eu.europa.ec.dgc.booking.dto.BookingResponse.BookingPassengerDccStatusRes
 import eu.europa.ec.dgc.booking.dto.BookingResponse.BookingPassengerResponse;
 import eu.europa.ec.dgc.booking.entity.BookingEntity;
 import eu.europa.ec.dgc.booking.entity.DccStatusEntity;
+import eu.europa.ec.dgc.booking.entity.FlightInfoEntity;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.core.convert.converter.Converter;
@@ -37,44 +37,46 @@ import org.springframework.stereotype.Service;
 public class BookingEntityToBookingResponseConverter implements Converter<BookingEntity, BookingResponse> {
 
     @Override
-    public BookingResponse convert(BookingEntity entity) {
-        BookingResponse response = new BookingResponse();
+    public BookingResponse convert(final BookingEntity entity) {
+        final BookingResponse response = new BookingResponse();
         response.setReference(entity.getReference());
         response.setTime(entity.getTime());
-        
-        this.convertPassangers(entity, response);        
-        this.convertFlightInfo(entity, response);        
+
+        this.convertPassangers(entity, response);
+        this.convertFlightInfo(entity, response);
         return response;
     }
 
-    private void convertPassangers(BookingEntity entity, BookingResponse response) {
-        List<BookingPassengerResponse> passengerResponses = entity.getPassengers().stream().map(passengerEntity -> {
-            BookingPassengerResponse passengerResponse = new BookingPassengerResponse();
-            passengerResponse.setId(passengerEntity.getId());
-            passengerResponse.setForename(passengerEntity.getForename());
-            passengerResponse.setLastname(passengerEntity.getLastname());
-            passengerResponse.setBirthDate(passengerEntity.getBirthDate());
-            passengerResponse.setServiceIdUsed(passengerEntity.getServiceIdUsed());
-            
-            DccStatusEntity dccStatusEntity = passengerEntity.getDccStatus();
-            if (dccStatusEntity != null) {
-                this.convertDccStatus(passengerResponse, dccStatusEntity);
-            }
-            return passengerResponse;
-        }).collect(Collectors.toList());
+    private void convertPassangers(final BookingEntity entity, final BookingResponse response) {
+        final List<BookingPassengerResponse> passengerResponses = entity.getPassengers().stream()
+                .map(passengerEntity -> {
+                    final BookingPassengerResponse passengerResponse = new BookingPassengerResponse();
+                    passengerResponse.setId(passengerEntity.getId());
+                    passengerResponse.setForename(passengerEntity.getForename());
+                    passengerResponse.setLastname(passengerEntity.getLastname());
+                    passengerResponse.setBirthDate(passengerEntity.getBirthDate());
+                    passengerResponse.setServiceIdUsed(passengerEntity.getServiceIdUsed());
+
+                    final DccStatusEntity dccStatusEntity = passengerEntity.getDccStatus();
+                    if (dccStatusEntity != null) {
+                        this.convertDccStatus(passengerResponse, dccStatusEntity);
+                    }
+                    return passengerResponse;
+                }).collect(Collectors.toList());
         response.setPassengers(passengerResponses);
     }
 
-    private void convertDccStatus(BookingPassengerResponse passengerResponse, DccStatusEntity dccStatusEntity) {
-        BookingPassengerDccStatusResponse dccStatusResponse = new BookingPassengerDccStatusResponse();
+    private void convertDccStatus(final BookingPassengerResponse passengerResponse,
+            final DccStatusEntity dccStatusEntity) {
+        final BookingPassengerDccStatusResponse dccStatusResponse = new BookingPassengerDccStatusResponse();
         dccStatusResponse.setIssuer(dccStatusEntity.getIssuer());
         dccStatusResponse.setIat(dccStatusEntity.getIat());
         dccStatusResponse.setSub(dccStatusEntity.getSub());
         dccStatusResponse.setConfirmation(dccStatusResponse.getConfirmation());
-                        
-        List<BookingPassengerDccStatusResultResponse> results = dccStatusEntity.getResults().stream()
+
+        final List<BookingPassengerDccStatusResultResponse> results = dccStatusEntity.getResults().stream()
                 .map(resultEntity -> {
-                    BookingPassengerDccStatusResultResponse resultResponse = 
+                    final BookingPassengerDccStatusResultResponse resultResponse = 
                             new BookingPassengerDccStatusResultResponse();
                     resultResponse.setIdentifier(resultEntity.getIdentifier());
                     resultResponse.setResult(resultEntity.getResult().name());
@@ -86,17 +88,22 @@ public class BookingEntityToBookingResponseConverter implements Converter<Bookin
         passengerResponse.setDccStatus(dccStatusResponse);
     }
 
-    private void convertFlightInfo(BookingEntity entity, BookingResponse response) {
-        BookingFlightInfoResponse flightInfoResponse = new BookingFlightInfoResponse();
-        flightInfoResponse.setFrom(entity.getFlightInfo().getFrom());
-        flightInfoResponse.setTo(entity.getFlightInfo().getTo());
-        flightInfoResponse.setTime(entity.getFlightInfo().getTime());
-        flightInfoResponse.setCountryOfArrival(entity.getFlightInfo().getCountryOfArrival());
-        flightInfoResponse.setCountryOfDeparture(entity.getFlightInfo().getCountryOfDeparture());
-        flightInfoResponse.setRegionOfArrival(entity.getFlightInfo().getRegionOfArrival());
-        flightInfoResponse.setRegionOfDeparture(entity.getFlightInfo().getRegionOfDeparture());
-        flightInfoResponse.setDepartureTime(entity.getFlightInfo().getDepartureTime());
-        flightInfoResponse.setArrivalTime(entity.getFlightInfo().getArrivalTime());
+    private void convertFlightInfo(final BookingEntity entity, final BookingResponse response) {
+        final FlightInfoEntity flightInfo = entity.getFlightInfo();
+        final BookingFlightInfoResponse flightInfoResponse = new BookingFlightInfoResponse();
+        flightInfoResponse.setFrom(flightInfo.getFrom());
+        flightInfoResponse.setTo(flightInfo.getTo());
+        flightInfoResponse.setTime(flightInfo.getTime());
+        flightInfoResponse.setCountryOfArrival(flightInfo.getCountryOfArrival());
+        flightInfoResponse.setCountryOfDeparture(flightInfo.getCountryOfDeparture());
+        flightInfoResponse.setRegionOfArrival(flightInfo.getRegionOfArrival());
+        flightInfoResponse.setRegionOfDeparture(flightInfo.getRegionOfDeparture());
+        flightInfoResponse.setDepartureTime(flightInfo.getDepartureTime());
+        flightInfoResponse.setArrivalTime(flightInfo.getArrivalTime());
+        flightInfoResponse.setType(flightInfo.getType());
+        flightInfoResponse.setCategories(flightInfo.getCategories());
+        flightInfoResponse.setLanguage(flightInfo.getLanguage());
+        flightInfoResponse.setConditionTypes(flightInfo.getConditionTypes());
         response.setFlightInfo(flightInfoResponse);
     }
 }
