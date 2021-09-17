@@ -52,6 +52,10 @@ public class BookingEntityToBoardingPassDtoConverter implements Converter<Bookin
         dto.setRegionOfDeparture(entity.getRegionOfDeparture());
         dto.setDepartureTime(entity.getDepartureTime());
         dto.setArrivalTime(entity.getArrivalTime());
+        dto.setType(entity.getType());
+        dto.setCategories(entity.getCategories());
+        dto.setLanguage(entity.getLanguage());
+        dto.setConditionTypes(entity.getConditionTypes());
         return dto;
     }
 }

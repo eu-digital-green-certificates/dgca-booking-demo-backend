@@ -107,5 +107,14 @@ public class BookingResponse {
 
         @JsonProperty("arrivalTime")
         private OffsetDateTime arrivalTime;
+        
+        private int type;
+        
+        private List<String> categories;
+        
+        @JsonProperty("lang")
+        private String language;
+        
+        private List<String> conditionTypes;
     }
 }

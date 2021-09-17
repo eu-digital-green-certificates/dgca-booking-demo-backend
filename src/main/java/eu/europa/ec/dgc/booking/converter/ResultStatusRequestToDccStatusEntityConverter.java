@@ -34,9 +34,9 @@ import org.springframework.stereotype.Service;
 public class ResultStatusRequestToDccStatusEntityConverter implements Converter<ResultStatusRequest, DccStatusEntity> {
 
     @Override
-    public DccStatusEntity convert(ResultStatusRequest request) {
-        ResultStatusDccStatusRequest dccStatusRequest = request.getDccStatus();
-        List<DccStatusResultEntity> results = dccStatusRequest.getResults().stream()
+    public DccStatusEntity convert(final ResultStatusRequest request) {
+        final ResultStatusDccStatusRequest dccStatusRequest = request.getDccStatus();
+        final List<DccStatusResultEntity> results = dccStatusRequest.getResults().stream()
                 .map(this::convertResult)
                 .collect(Collectors.toList());
 
@@ -48,7 +48,7 @@ public class ResultStatusRequestToDccStatusEntityConverter implements Converter<
                 .build();
     }
 
-    private DccStatusResultEntity convertResult(ResultStatusDccStatusResultRequest request) {
+    private DccStatusResultEntity convertResult(final ResultStatusDccStatusResultRequest request) {
         return DccStatusResultEntity.builder()
                 .identifier(request.getIdentifier())
                 .result(request.getResult())
