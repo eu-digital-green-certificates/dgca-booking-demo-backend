@@ -77,8 +77,7 @@ public class BookingEntityToBookingResponseConverter implements Converter<Bookin
 
         final List<BookingPassengerDccStatusResultResponse> results = dccStatusEntity.getResults().stream()
                 .map(resultEntity -> {
-                    final BookingPassengerDccStatusResultResponse resultResponse = 
-                            new BookingPassengerDccStatusResultResponse();
+                    final BookingPassengerDccStatusResultResponse resultResponse = new BookingPassengerDccStatusResultResponse();
                     resultResponse.setIdentifier(resultEntity.getIdentifier());
                     resultResponse.setResult(resultEntity.getResult().name());
                     resultResponse.setType(resultEntity.getType().getName());
