@@ -47,13 +47,17 @@ public class PassengerEntity {
 
     @Setter
     private DccStatusEntity dccStatus;
-    
+
     // service id that was used for the token
     @Setter
     private String serviceIdUsed;
 
+    // AccessTokenPayload.jti
+    private String jti;
+
     public PassengerEntity() {
         this.id = UUID.randomUUID();
+        this.jti = UUID.randomUUID().toString();
     }
 
     /**
