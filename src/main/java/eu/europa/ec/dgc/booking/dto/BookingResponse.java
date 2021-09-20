@@ -21,7 +21,6 @@
 package eu.europa.ec.dgc.booking.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +47,7 @@ public class BookingResponse {
 
         private String lastname;
 
-        private LocalDate birthDate;
+        private String birthDate;
 
         private BookingPassengerDccStatusResponse dccStatus;
 
