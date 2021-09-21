@@ -20,7 +20,6 @@
 
 package eu.europa.ec.dgc.booking.dto;
 
-import java.time.LocalDate;
 import java.util.UUID;
 import lombok.Data;
 
@@ -33,7 +32,7 @@ public class BookingRequest {
     
     private String lastname;
     
-    private LocalDate birthDate;
+    private String birthDate;
 
     private String bookingReference;
 }

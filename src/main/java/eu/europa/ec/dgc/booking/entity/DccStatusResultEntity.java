@@ -31,9 +31,9 @@ public class DccStatusResultEntity {
 
     private String identifier;
 
-    private DccStatusResult result;
+    private String result;
 
-    private DccStatusType type;
+    private String type;
 
     private String details;
 
@@ -45,8 +45,8 @@ public class DccStatusResultEntity {
     public static DccStatusResultEntity open() {
         return DccStatusResultEntity.builder()
                 .identifier("Demo identifier")
-                .result(DccStatusResult.OPEN)
-                .type(DccStatusType.TECHNICAL_CHECK)
+                .result("OPEN")
+                .type("Technical Check")
                 .build();
     }
 
@@ -58,8 +58,8 @@ public class DccStatusResultEntity {
     public static DccStatusResultEntity failed() {
         return DccStatusResultEntity.builder()
                 .identifier("Demo identifier")
-                .result(DccStatusResult.FAILED)
-                .type(DccStatusType.ISSUER_INVALIDATION)
+                .result("FAILED")
+                .type("Issuer Invalidation")
                 .build();
     }
 
@@ -71,8 +71,8 @@ public class DccStatusResultEntity {
     public static DccStatusResultEntity passed() {
         return DccStatusResultEntity.builder()
                 .identifier("Demo identifier")
-                .result(DccStatusResult.PASSED)
-                .type(DccStatusType.ACCEPTANCE)
+                .result("PASSED")
+                .type("Destination Acceptance")
                 .build();
     }
 }

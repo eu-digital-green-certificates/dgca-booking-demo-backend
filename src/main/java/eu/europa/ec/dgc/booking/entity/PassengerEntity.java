@@ -23,6 +23,7 @@ package eu.europa.ec.dgc.booking.entity;
 import com.github.javafaker.Faker;
 import eu.europa.ec.dgc.booking.dto.BookingRequest;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,6 +35,8 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class PassengerEntity {
 
+    private static final DateTimeFormatter BIRTH_DATE_FORMATTER = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+
     private UUID id;
 
     @Setter
@@ -43,17 +46,21 @@ public class PassengerEntity {
     private String lastname;
 
     @Setter
-    private LocalDate birthDate;
+    private String birthDate;
 
     @Setter
     private DccStatusEntity dccStatus;
-    
+
     // service id that was used for the token
     @Setter
     private String serviceIdUsed;
 
+    // AccessTokenPayload.jti
+    private String jti;
+
     public PassengerEntity() {
         this.id = UUID.randomUUID();
+        this.jti = UUID.randomUUID().toString();
     }
 
     /**
@@ -99,17 +106,17 @@ public class PassengerEntity {
             entity.id = UUID.fromString("6751B6A6-A31D-44DA-9C0F-ECCCF4F19338");
             entity.setForename("Lionel");
             entity.setLastname("Kuhic");
-            entity.setBirthDate(LocalDate.of(1994, 5, 25));
+            entity.setBirthDate(LocalDate.of(1994, 5, 25).format(BIRTH_DATE_FORMATTER));
         } else if (pos == 1) {
             entity.id = UUID.fromString("B67F6578-08D9-4254-BCB8-4936053865C6");
             entity.setForename("Fidel");
             entity.setLastname("Lang");
-            entity.setBirthDate(LocalDate.of(1978, 8, 14));
+            entity.setBirthDate(LocalDate.of(1978, 8, 14).format(BIRTH_DATE_FORMATTER));
         } else if (pos == 2) {
             entity.id = UUID.fromString("CB992C09-48EC-4C5B-9303-C2DC06E7496D");
             entity.setForename("Demetria");
             entity.setLastname("Hagenes");
-            entity.setBirthDate(LocalDate.of(2002, 4, 25));
+            entity.setBirthDate(LocalDate.of(2002, 4, 25).format(BIRTH_DATE_FORMATTER));
         } else {
             throw new IllegalArgumentException(String.format("Unsupported pos '%s'", pos));
         }

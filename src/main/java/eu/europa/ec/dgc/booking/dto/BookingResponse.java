@@ -21,7 +21,6 @@
 package eu.europa.ec.dgc.booking.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,11 +47,14 @@ public class BookingResponse {
 
         private String lastname;
 
-        private LocalDate birthDate;
+        private String birthDate;
 
         private BookingPassengerDccStatusResponse dccStatus;
-        
+
         private String serviceIdUsed;
+
+        // AccessTokenPayload.jti
+        private String jti;
     }
 
     @Data
@@ -89,7 +91,7 @@ public class BookingResponse {
         private String to;
 
         private OffsetDateTime time;
-        
+
         @JsonProperty("coa")
         private String countryOfArrival;
 
@@ -107,14 +109,14 @@ public class BookingResponse {
 
         @JsonProperty("arrivalTime")
         private OffsetDateTime arrivalTime;
-        
+
         private int type;
-        
+
         private List<String> categories;
-        
+
         @JsonProperty("lang")
         private String language;
-        
+
         private List<String> conditionTypes;
     }
 }

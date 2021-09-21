@@ -56,6 +56,7 @@ public class BookingEntityToBookingResponseConverter implements Converter<Bookin
                     passengerResponse.setLastname(passengerEntity.getLastname());
                     passengerResponse.setBirthDate(passengerEntity.getBirthDate());
                     passengerResponse.setServiceIdUsed(passengerEntity.getServiceIdUsed());
+                    passengerResponse.setJti(passengerEntity.getJti());
 
                     final DccStatusEntity dccStatusEntity = passengerEntity.getDccStatus();
                     if (dccStatusEntity != null) {
@@ -76,11 +77,11 @@ public class BookingEntityToBookingResponseConverter implements Converter<Bookin
 
         final List<BookingPassengerDccStatusResultResponse> results = dccStatusEntity.getResults().stream()
                 .map(resultEntity -> {
-                    final BookingPassengerDccStatusResultResponse resultResponse = 
+                    final BookingPassengerDccStatusResultResponse resultResponse =
                             new BookingPassengerDccStatusResultResponse();
                     resultResponse.setIdentifier(resultEntity.getIdentifier());
-                    resultResponse.setResult(resultEntity.getResult().name());
-                    resultResponse.setType(resultEntity.getType().getName());
+                    resultResponse.setResult(resultEntity.getResult());
+                    resultResponse.setType(resultEntity.getType());
                     resultResponse.setDetails(resultEntity.getDetails());
                     return resultResponse;
                 }).collect(Collectors.toList());
