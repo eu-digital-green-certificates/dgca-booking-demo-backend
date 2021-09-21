@@ -80,8 +80,8 @@ public class BookingEntityToBookingResponseConverter implements Converter<Bookin
                     final BookingPassengerDccStatusResultResponse resultResponse =
                             new BookingPassengerDccStatusResultResponse();
                     resultResponse.setIdentifier(resultEntity.getIdentifier());
-                    resultResponse.setResult(resultEntity.getResult().name());
-                    resultResponse.setType(resultEntity.getType().getName());
+                    resultResponse.setResult(resultEntity.getResult());
+                    resultResponse.setType(resultEntity.getType());
                     resultResponse.setDetails(resultEntity.getDetails());
                     return resultResponse;
                 }).collect(Collectors.toList());

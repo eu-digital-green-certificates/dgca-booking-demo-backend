@@ -20,8 +20,6 @@
 
 package eu.europa.ec.dgc.booking.dto;
 
-import eu.europa.ec.dgc.booking.entity.DccStatusResult;
-import eu.europa.ec.dgc.booking.entity.DccStatusType;
 import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
@@ -56,9 +54,9 @@ public class ResultStatusRequest {
 
         private String identifier;
 
-        private DccStatusResult result;
+        private String result;
 
-        private DccStatusType type;
+        private String type;
 
         private String details;
     }
