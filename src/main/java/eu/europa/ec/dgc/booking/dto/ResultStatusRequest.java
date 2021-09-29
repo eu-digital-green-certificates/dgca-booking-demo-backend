@@ -21,9 +21,6 @@
 package eu.europa.ec.dgc.booking.dto;
 
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -31,8 +28,6 @@ public class ResultStatusRequest {
 
     private String token;
 
-    @Valid
-    @NotNull
     private ResultStatusDccStatusRequest dccStatus;
 
     @Data
@@ -40,12 +35,10 @@ public class ResultStatusRequest {
 
         private String issuer;
 
-        private long iat;
+        private Long iat;
 
         private String sub;
 
-        @Valid
-        @NotEmpty
         private List<ResultStatusDccStatusResultRequest> results;
     }
 
