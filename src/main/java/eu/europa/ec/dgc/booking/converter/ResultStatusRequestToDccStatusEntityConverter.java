@@ -24,6 +24,7 @@ import eu.europa.ec.dgc.booking.dto.ResultStatusRequest;
 import eu.europa.ec.dgc.booking.dto.ResultStatusRequest.ResultStatusDccStatusRequest;
 import eu.europa.ec.dgc.booking.dto.ResultStatusRequest.ResultStatusDccStatusResultRequest;
 import eu.europa.ec.dgc.booking.entity.DccStatusEntity;
+import eu.europa.ec.dgc.booking.entity.DccStatusEntity.DccStatusEntityBuilder;
 import eu.europa.ec.dgc.booking.entity.DccStatusResultEntity;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,17 +36,22 @@ public class ResultStatusRequestToDccStatusEntityConverter implements Converter<
 
     @Override
     public DccStatusEntity convert(final ResultStatusRequest request) {
-        final ResultStatusDccStatusRequest dccStatusRequest = request.getDccStatus();
-        final List<DccStatusResultEntity> results = dccStatusRequest.getResults().stream()
-                .map(this::convertResult)
-                .collect(Collectors.toList());
+        final DccStatusEntityBuilder builder = DccStatusEntity.builder();
 
-        return DccStatusEntity.builder()
-                .issuer(dccStatusRequest.getIssuer())
-                .iat(dccStatusRequest.getIat())
-                .sub(dccStatusRequest.getSub())
-                .results(results)
-                .build();
+        final ResultStatusDccStatusRequest dccStatusRequest = request.getDccStatus();
+        if (dccStatusRequest != null) {
+            builder.issuer(dccStatusRequest.getIssuer())
+                    .iat(dccStatusRequest.getIat())
+                    .sub(dccStatusRequest.getSub());
+
+            if (dccStatusRequest.getResults() != null) {
+                final List<DccStatusResultEntity> results = dccStatusRequest.getResults().stream()
+                        .map(this::convertResult)
+                        .collect(Collectors.toList());
+                builder.results(results);
+            }
+        }
+        return builder.build();
     }
 
     private DccStatusResultEntity convertResult(final ResultStatusDccStatusResultRequest request) {
