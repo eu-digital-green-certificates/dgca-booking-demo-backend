@@ -84,6 +84,13 @@ public class BookingController {
         return converter.convert(bookingService.getBySessionId(sessionId), BookingResponse.class);
     }
 
+    /**
+     * Replace Booking Data.
+     * 
+     * @param request {@link BookingReplaceRequest}
+     * @param session {@link HttpSession}
+     * @return {@link BookingResponse}
+     */
     @Operation(summary = "Replace Booking Data", description = "Replace Booking Data")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "OK"),
@@ -92,7 +99,8 @@ public class BookingController {
         @ApiResponse(responseCode = "500", description = "Internal Server Error")
     })
     @ResponseStatus(code = HttpStatus.OK)
-    @PostMapping(path = PATH_REPLACE, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = PATH_REPLACE, 
+        consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public BookingResponse replace(@Valid @RequestBody final BookingReplaceRequest request, final HttpSession session) {
         final String sessionId = session.getId();
         log.debug("Incoming POST request to '{}' with content '{}' and sessionId '{}'",

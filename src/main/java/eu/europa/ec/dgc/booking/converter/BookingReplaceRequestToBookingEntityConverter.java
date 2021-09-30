@@ -47,32 +47,32 @@ public class BookingReplaceRequestToBookingEntityConverter implements Converter<
         entity.setReference(request.getReference());
         entity.setTime(request.getTime() != null ? request.getTime() : OffsetDateTime.now());
         entity.setPassengers(this.convertPassengers(request.getPassengers()));
-        entity.setFlightInfo(this.convert(request.getFlightInfo()));
+        entity.setFlightInfo(this.convertFlightInfo(request.getFlightInfo()));
         return entity;
     }
 
-    public List<PassengerEntity> convertPassengers(List<PassengerRequest> requests) {
+    private List<PassengerEntity> convertPassengers(List<PassengerRequest> requests) {
         if (requests != null && !requests.isEmpty()) {
             return requests.stream()
-                    .map(this::convert)
+                    .map(this::convertPassenger)
                     .collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
 
-    public PassengerEntity convert(PassengerRequest request) {
+    private PassengerEntity convertPassenger(PassengerRequest request) {
         final PassengerEntity entity = new PassengerEntity();
         entity.setId(request.getId() != null ? request.getId() : UUID.randomUUID());
         entity.setForename(request.getForename());
-        entity.setLastname(request.getLastname());        
+        entity.setLastname(request.getLastname());
         entity.setBirthDate(request.getBirthDate());
-        entity.setDccStatus(this.convert(request.getDccStatus()));        
+        entity.setDccStatus(this.convertDccStatus(request.getDccStatus()));
         entity.setServiceIdUsed(request.getServiceIdUsed());
         entity.setJti(request.getJti());
         return entity;
     }
 
-    public DccStatusEntity convert(final DccStatusRequest request) {        
+    private DccStatusEntity convertDccStatus(final DccStatusRequest request) {
         if (request != null) {
             return DccStatusEntity.builder()
                     .issuer(request.getIssuer())
@@ -85,16 +85,16 @@ public class BookingReplaceRequestToBookingEntityConverter implements Converter<
         return null;
     }
 
-    public List<DccStatusResultEntity> convertResults(List<ResultRequest> requests) {
+    private List<DccStatusResultEntity> convertResults(List<ResultRequest> requests) {
         if (requests != null && !requests.isEmpty()) {
             return requests.stream()
-                    .map(this::convert)
+                    .map(this::convertResult)
                     .collect(Collectors.toList());
         }
         return new ArrayList<>();
     }
 
-    public DccStatusResultEntity convert(ResultRequest request) {
+    private DccStatusResultEntity convertResult(ResultRequest request) {
         return DccStatusResultEntity.builder()
                 .identifier(request.getIdentifier())
                 .result(request.getResult())
@@ -103,7 +103,7 @@ public class BookingReplaceRequestToBookingEntityConverter implements Converter<
                 .build();
     }
 
-    private FlightInfoEntity convert(BookingFlightInfoRequest request) {
+    private FlightInfoEntity convertFlightInfo(BookingFlightInfoRequest request) {
         if (request != null) {
             return FlightInfoEntity.builder()
                     .from(request.getFrom())

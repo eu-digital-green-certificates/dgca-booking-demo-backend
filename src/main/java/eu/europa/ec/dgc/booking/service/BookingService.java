@@ -127,7 +127,14 @@ public class BookingService {
 
         persistence.save(sessionId, bookingEntity);
     }
-    
+
+    /**
+     * Replaces or creates a {@link BookingEntity}.
+     * 
+     * @param sessionId Session ID
+     * @param request {@link BookingReplaceRequest}
+     * @return {@link BookingEntity}
+     */
     public BookingEntity replace(final String sessionId, final BookingReplaceRequest request) {
         final BookingEntity entity = this.converter.convert(request, BookingEntity.class);
         persistence.save(sessionId, entity);
