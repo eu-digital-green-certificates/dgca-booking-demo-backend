@@ -7,6 +7,9 @@ server {
     location /booking {
       proxy_pass http://localhost:8080/booking;
     }
+    location /booking/replace {
+      proxy_pass http://localhost:8080/booking/replace;
+    }
     location /boardingpass {
       proxy_pass http://localhost:8080/boardingpass;
     }

@@ -73,7 +73,7 @@ public class BookingEntityToBookingResponseConverter implements Converter<Bookin
         dccStatusResponse.setIssuer(dccStatusEntity.getIssuer());
         dccStatusResponse.setIat(dccStatusEntity.getIat());
         dccStatusResponse.setSub(dccStatusEntity.getSub());
-        dccStatusResponse.setConfirmation(dccStatusResponse.getConfirmation());
+        dccStatusResponse.setConfirmation(dccStatusEntity.getConfirmation());
 
         final List<BookingPassengerDccStatusResultResponse> results = dccStatusEntity.getResults().stream()
                 .map(resultEntity -> {

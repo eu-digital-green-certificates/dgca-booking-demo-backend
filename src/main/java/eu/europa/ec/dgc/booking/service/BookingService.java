@@ -20,6 +20,7 @@
 
 package eu.europa.ec.dgc.booking.service;
 
+import eu.europa.ec.dgc.booking.dto.BookingReplaceRequest;
 import eu.europa.ec.dgc.booking.dto.BookingRequest;
 import eu.europa.ec.dgc.booking.dto.DevDccStatus;
 import eu.europa.ec.dgc.booking.dto.ResultStatusRequest;
@@ -125,6 +126,12 @@ public class BookingService {
         this.updatePassengersDccStatus(dccStatus, bookingEntity);
 
         persistence.save(sessionId, bookingEntity);
+    }
+    
+    public BookingEntity replace(final String sessionId, final BookingReplaceRequest request) {
+        final BookingEntity entity = this.converter.convert(request, BookingEntity.class);
+        persistence.save(sessionId, entity);
+        return entity;
     }
 
     /**

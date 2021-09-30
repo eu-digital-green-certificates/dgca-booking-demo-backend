@@ -25,17 +25,13 @@ import eu.europa.ec.dgc.booking.dto.BookingRequest;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.Setter;
-import lombok.ToString;
 
-@Getter
-@ToString
-@EqualsAndHashCode
+@Data
 public class PassengerEntity {
 
-    private static final DateTimeFormatter BIRTH_DATE_FORMATTER = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+    public static final DateTimeFormatter BIRTH_DATE_FORMATTER = DateTimeFormatter.ofPattern("MM-dd-yyyy");
 
     private UUID id;
 
