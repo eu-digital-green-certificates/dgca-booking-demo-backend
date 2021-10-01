@@ -73,7 +73,8 @@ public class BookingController {
         @ApiResponse(responseCode = "501", description = "Not Implemented")
     })
     @ResponseStatus(code = HttpStatus.OK)
-    @PostMapping(path = PATH, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = PATH, 
+        consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public BookingResponse booking(
             @Valid @RequestBody final BookingRequest booking,
             @RequestParam(name = "setDccStatus", required = false) final DevDccStatus dccStatus,
@@ -84,11 +85,17 @@ public class BookingController {
         bookingService.create(sessionId, booking, dccStatus);
 
         try {
-            return converter.convert(bookingService
-                    .getBySessionId(sessionId), BookingResponse.class);
+            final String reference = booking.getBookingReference();
+            if (reference != null && reference.startsWith("preset")) {
+                return converter.convert(bookingService
+                        .getByReference(reference), BookingResponse.class);
+            } else {
+                return converter.convert(bookingService
+                        .getBySessionId(sessionId), BookingResponse.class);
+            }
         } catch (BookingNotFoundException e) {
             return converter.convert(bookingService
-                    .getByReference(booking.getBookingReference()), BookingResponse.class);
+                    .getBySessionId(sessionId), BookingResponse.class);
         }
     }
 
