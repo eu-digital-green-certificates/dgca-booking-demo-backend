@@ -28,6 +28,7 @@ import eu.europa.ec.dgc.booking.entity.PassengersH2Entity;
 import eu.europa.ec.dgc.booking.exception.BookingNotFoundException;
 import eu.europa.ec.dgc.booking.repository.BookingH2Repository;
 import eu.europa.ec.dgc.booking.repository.PassengersH2Repository;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -50,8 +51,8 @@ public class BookingPersistenceService {
      * @param sessionId Session ID
      * @return {@link BookingEntity}
      */
-    public BookingEntity getBySessionId(String sessionId) {
-        BookingH2Entity entity = this.bookingRepository.findById(sessionId)
+    public BookingEntity getBySessionId(final String sessionId) {
+        final BookingH2Entity entity = this.bookingRepository.findById(sessionId)
                 .orElseThrow(BookingNotFoundException::new);
         return this.fromJson(entity.getBookingJson());
     }
@@ -62,8 +63,8 @@ public class BookingPersistenceService {
      * @param passengerId Passenger ID as string
      * @return {@link BookingEntity}
      */
-    public BookingEntity getByPassengerId(String passengerId) {
-        return getByPassengerId(UUID.fromString(passengerId));
+    public BookingEntity getByPassengerId(final String passengerId) {
+        return this.getByPassengerId(UUID.fromString(passengerId));
     }
 
     /**
@@ -75,6 +76,18 @@ public class BookingPersistenceService {
     public BookingEntity getByPassengerId(final UUID passengerId) {
         final String sessionId = getSessionIdByPassengerId(passengerId);
         return this.getBySessionId(sessionId);
+    }
+
+    /**
+     * Returns booking by reference.
+     * 
+     * @param reference {@link String}
+     * @return {@link BookingEntity}
+     */
+    public Optional<BookingEntity> getByReference(final String reference) {
+        return this.bookingRepository.findByReference(reference).stream()
+                .findFirst()
+                .map(booking -> this.fromJson(booking.getBookingJson()));
     }
 
     /**
@@ -94,7 +107,7 @@ public class BookingPersistenceService {
      * @return Session ID
      */
     public String getSessionIdByPassengerId(final UUID passengerId) {
-        final PassengersH2Entity entity = passengersRepository.findById(passengerId)
+        final PassengersH2Entity entity = this.passengersRepository.findById(passengerId)
                 .orElseThrow(() -> new BookingNotFoundException(
                         String.format("Booking not found by passenger ID '%s'", passengerId)));
         return entity.getSessionId();
@@ -106,46 +119,50 @@ public class BookingPersistenceService {
      * @param sessionId Session ID
      * @param booking Booking
      */
-    public void save(String sessionId, BookingEntity booking) {
+    public void save(final String sessionId, final BookingEntity booking) {
         this.cleanBySessionId(sessionId);
 
-        BookingH2Entity entity = new BookingH2Entity();
+        final BookingH2Entity entity = new BookingH2Entity();
         entity.setSessionId(sessionId);
+        entity.setReference(booking.getReference());
         entity.setBookingJson(this.toJson(booking));
-        bookingRepository.save(entity);
+        this.bookingRepository.save(entity);
 
         // save passengers IDs
         booking.getPassengers().stream().map(passenger -> {
-            PassengersH2Entity passEntity = new PassengersH2Entity();
+            final PassengersH2Entity passEntity = new PassengersH2Entity();
             passEntity.setId(passenger.getId());
             passEntity.setSessionId(sessionId);
             return passEntity;
         }).forEach(passengersRepository::save);
     }
 
-    private void cleanBySessionId(String sessionId) {
-        if (bookingRepository.existsById(sessionId)) {
-            bookingRepository.deleteById(sessionId);
+    public void deleteByReference(final String reference) {
+        this.bookingRepository.deleteByReference(reference);
+    }
+
+    private void cleanBySessionId(final String sessionId) {
+        if (this.bookingRepository.existsById(sessionId)) {
+            this.bookingRepository.deleteById(sessionId);
         }
-        if (passengersRepository.existsBySessionId(sessionId)) {
-            passengersRepository.deleteAllBySessionId(sessionId);
+        if (this.passengersRepository.existsBySessionId(sessionId)) {
+            this.passengersRepository.deleteAllBySessionId(sessionId);
         }
     }
 
-    private BookingEntity fromJson(String data) {
+    private BookingEntity fromJson(final String data) {
         try {
-            return mapper.readValue(data, BookingEntity.class);
+            return this.mapper.readValue(data, BookingEntity.class);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException(e);
         }
     }
 
-    private String toJson(BookingEntity data) {
+    private String toJson(final BookingEntity data) {
         try {
-            return mapper.writeValueAsString(data);
+            return this.mapper.writeValueAsString(data);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException(e);
         }
     }
-
 }

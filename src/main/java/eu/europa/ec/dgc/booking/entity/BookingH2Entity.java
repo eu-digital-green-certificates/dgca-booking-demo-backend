@@ -35,6 +35,9 @@ public class BookingH2Entity {
     @Column(name = "session_id", columnDefinition = "varchar(255)", nullable = false, updatable = false)
     private String sessionId;
 
+    @Column(name = "reference", columnDefinition = "varchar(255)")
+    private String reference;
+
     @Column(name = "booking", columnDefinition = "varchar(2147483647)")
     private String bookingJson;
 }

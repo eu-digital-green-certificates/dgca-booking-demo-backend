@@ -28,7 +28,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PassengersH2Repository extends JpaRepository<PassengersH2Entity, UUID> {
 
-    void deleteAllBySessionId(String sessionId);
+    void deleteAllBySessionId(final String sessionId);
 
-    boolean existsBySessionId(String sessionId);
+    boolean existsBySessionId(final String sessionId);
 }

@@ -20,9 +20,12 @@
 
 package eu.europa.ec.dgc.booking.controller;
 
+import eu.europa.ec.dgc.booking.dto.BookingReplaceRequest;
 import eu.europa.ec.dgc.booking.dto.BookingRequest;
 import eu.europa.ec.dgc.booking.dto.BookingResponse;
 import eu.europa.ec.dgc.booking.dto.DevDccStatus;
+import eu.europa.ec.dgc.booking.entity.BookingEntity;
+import eu.europa.ec.dgc.booking.exception.BookingNotFoundException;
 import eu.europa.ec.dgc.booking.service.BookingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -47,6 +50,8 @@ public class BookingController {
 
     private static final String PATH = "/booking";
 
+    private static final String PATH_REPLACE = "/booking/replace";
+
     private final BookingService bookingService;
 
     private final ConversionService converter;
@@ -70,13 +75,46 @@ public class BookingController {
     @ResponseStatus(code = HttpStatus.OK)
     @PostMapping(path = PATH, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public BookingResponse booking(
-            @Valid @RequestBody BookingRequest booking,
-            @RequestParam(name = "setDccStatus", required = false) DevDccStatus dccStatus,
+            @Valid @RequestBody final BookingRequest booking,
+            @RequestParam(name = "setDccStatus", required = false) final DevDccStatus dccStatus,
             HttpSession session) {
-        String sessionId = session.getId();
+        final String sessionId = session.getId();
         log.debug("Incoming POST request to '{}' with content '{}', optional dccStatus '{}' and sessionId '{}'",
                 PATH, booking, dccStatus, sessionId);
         bookingService.create(sessionId, booking, dccStatus);
-        return converter.convert(bookingService.getBySessionId(sessionId), BookingResponse.class);
+
+        try {
+            return converter.convert(bookingService
+                    .getBySessionId(sessionId), BookingResponse.class);
+        } catch (BookingNotFoundException e) {
+            return converter.convert(bookingService
+                    .getByReference(booking.getBookingReference()), BookingResponse.class);
+        }
+    }
+
+    /**
+     * Replace Booking Data.
+     * 
+     * @param request {@link BookingReplaceRequest}
+     * @param session {@link HttpSession}
+     * @return {@link BookingResponse}
+     */
+    @Operation(summary = "Replace Booking Data", description = "Replace Booking Data")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "Bad Request / Validation errors"),
+        @ApiResponse(responseCode = "415", description = "Unsupported Media Type"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error")
+    })
+    @ResponseStatus(code = HttpStatus.OK)
+    @PostMapping(path = PATH_REPLACE, 
+        consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public BookingResponse replace(
+            @Valid @RequestBody final BookingReplaceRequest request, final HttpSession session) {
+        final String sessionId = session.getId();
+        log.debug("Incoming POST request to '{}' with content '{}' and sessionId '{}'",
+                PATH_REPLACE, request, sessionId);
+        final BookingEntity entity = bookingService.replace(sessionId, request);
+        return converter.convert(entity, BookingResponse.class);
     }
 }
