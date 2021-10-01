@@ -31,13 +31,16 @@ import eu.europa.ec.dgc.booking.exception.BookingNotFoundException;
 import eu.europa.ec.dgc.booking.exception.NotImplementedException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookingService {
@@ -65,7 +68,7 @@ public class BookingService {
      * 
      * @return {@link BookingEntity}
      */
-    public BookingEntity getBySessionId(String sessionId) {
+    public BookingEntity getBySessionId(final String sessionId) {
         return this.persistence.getBySessionId(sessionId);
     }
 
@@ -75,8 +78,20 @@ public class BookingService {
      * @param passengerId Passenger ID
      * @return {@link BookingEntity}
      */
-    public BookingEntity getByPassengerId(String passengerId) {
+    public BookingEntity getByPassengerId(final String passengerId) {
         return this.persistence.getByPassengerId(passengerId);
+    }
+
+    /**
+     * Return BookingEntity by reference.
+     * 
+     * @param reference {@link String}
+     * @return {@link BookingEntity}
+     */
+    public BookingEntity getByReference(final String reference) {
+        return this.persistence.getByReference(reference)
+                .orElseThrow(() -> new BookingNotFoundException(
+                        String.format("Booking not found by reference '%s'", reference)));
     }
 
     /**
@@ -105,27 +120,36 @@ public class BookingService {
      * Create and write BookingEntity to session. if an entry already exists, it will be deleted.
      * 
      * @param sessionId current Session ID
-     * @param bookingRequest data from the frontend
+     * @param request data from the frontend
      * @param dccStatus status manipulation for test purposes
      */
-    public void create(String sessionId, BookingRequest bookingRequest, DevDccStatus dccStatus) {
-        BookingEntity bookingEntity = new BookingEntity();
-        bookingEntity.setReference(bookingRequest.getBookingReference());
-        bookingEntity.addPassenger(PassengerEntity.build(bookingRequest));
+    public void create(final String sessionId, final BookingRequest request, final DevDccStatus dccStatus) {
+        final Optional<BookingEntity> entity = this.persistence.getByReference(request.getBookingReference());
+        final boolean isPreset = entity.isPresent()
+                && request.getBookingReference() != null
+                && request.getBookingReference().startsWith("preset");
+        if (!isPreset) {
+            log.info("Create new BookingEntity for reference '{}'", request.getBookingReference());
+            final BookingEntity bookingEntity = new BookingEntity();
+            bookingEntity.setReference(request.getBookingReference());
+            bookingEntity.addPassenger(PassengerEntity.build(request));
 
-        int passengersMin = dccStatus == DevDccStatus.MIX ? 1 : passengersGeneratorMin;
-        Integer numberToGenerate = new Random().nextInt(passengersGeneratorMax - passengersMin) + passengersMin;
-        for (int i = 0; i < numberToGenerate; i++) {
-            if (passengersRandom) {
-                bookingEntity.addPassenger(PassengerEntity.random());
-            } else {
-                bookingEntity.addPassenger(PassengerEntity.immutable(i));
+            int passengersMin = dccStatus == DevDccStatus.MIX ? 1 : this.passengersGeneratorMin;
+            Integer numberToGenerate = new Random().nextInt(this.passengersGeneratorMax - passengersMin)
+                    + passengersMin;
+            for (int i = 0; i < numberToGenerate; i++) {
+                if (this.passengersRandom) {
+                    bookingEntity.addPassenger(PassengerEntity.random());
+                } else {
+                    bookingEntity.addPassenger(PassengerEntity.immutable(i));
+                }
             }
+
+            this.updatePassengersDccStatus(dccStatus, bookingEntity);
+            this.persistence.save(sessionId, bookingEntity);
+        } else {
+            log.info("Use existing BookingEntity by reference '{}'", request.getBookingReference());
         }
-
-        this.updatePassengersDccStatus(dccStatus, bookingEntity);
-
-        persistence.save(sessionId, bookingEntity);
     }
 
     /**
@@ -137,7 +161,8 @@ public class BookingService {
      */
     public BookingEntity replace(final String sessionId, final BookingReplaceRequest request) {
         final BookingEntity entity = this.converter.convert(request, BookingEntity.class);
-        persistence.save(sessionId, entity);
+        this.persistence.deleteByReference(request.getReference());
+        this.persistence.save(sessionId, entity);
         return entity;
     }
 

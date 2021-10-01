@@ -25,6 +25,7 @@ import eu.europa.ec.dgc.booking.dto.BookingRequest;
 import eu.europa.ec.dgc.booking.dto.BookingResponse;
 import eu.europa.ec.dgc.booking.dto.DevDccStatus;
 import eu.europa.ec.dgc.booking.entity.BookingEntity;
+import eu.europa.ec.dgc.booking.exception.BookingNotFoundException;
 import eu.europa.ec.dgc.booking.service.BookingService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -81,7 +82,14 @@ public class BookingController {
         log.debug("Incoming POST request to '{}' with content '{}', optional dccStatus '{}' and sessionId '{}'",
                 PATH, booking, dccStatus, sessionId);
         bookingService.create(sessionId, booking, dccStatus);
-        return converter.convert(bookingService.getBySessionId(sessionId), BookingResponse.class);
+
+        try {
+            return converter.convert(bookingService
+                    .getBySessionId(sessionId), BookingResponse.class);
+        } catch (BookingNotFoundException e) {
+            return converter.convert(bookingService
+                    .getByReference(booking.getBookingReference()), BookingResponse.class);
+        }
     }
 
     /**
@@ -101,7 +109,8 @@ public class BookingController {
     @ResponseStatus(code = HttpStatus.OK)
     @PostMapping(path = PATH_REPLACE, 
         consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public BookingResponse replace(@Valid @RequestBody final BookingReplaceRequest request, final HttpSession session) {
+    public BookingResponse replace(
+            @Valid @RequestBody final BookingReplaceRequest request, final HttpSession session) {
         final String sessionId = session.getId();
         log.debug("Incoming POST request to '{}' with content '{}' and sessionId '{}'",
                 PATH_REPLACE, request, sessionId);

@@ -8,5 +8,6 @@ CREATE TABLE passengers (
 
 CREATE TABLE bookings (
   session_id VARCHAR(255) PRIMARY KEY,
+  reference VARCHAR(255) DEFAULT NULL,
   booking VARCHAR(2147483647) DEFAULT NULL
 );

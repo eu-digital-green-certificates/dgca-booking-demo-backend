@@ -21,9 +21,14 @@
 package eu.europa.ec.dgc.booking.repository;
 
 import eu.europa.ec.dgc.booking.entity.BookingH2Entity;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BookingH2Repository extends JpaRepository<BookingH2Entity, String> {
+
+    List<BookingH2Entity> findByReference(final String reference);
+
+    void deleteByReference(final String reference);
 }
