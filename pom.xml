@@ -32,6 +32,7 @@
         <springdoc.version>1.6.0</springdoc.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
         <junit.version>5.7.2</junit.version>
+        <h2.version>2.0.202</h2.version>
         <!-- plugins -->
         <plugin.checkstyle.version>3.1.2</plugin.checkstyle.version>
         <plugin.sonar.version>3.9.1.2184</plugin.sonar.version>
@@ -75,12 +76,12 @@
 	    <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-api</artifactId>
-                <version>2.16.0</version>
+                <version>${log4j2.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-core</artifactId>
-                <version>2.16.0</version>
+                <version>${log4j2.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -146,6 +147,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
         </dependency>
 		<dependency>
             <groupId>org.springframework.boot</groupId>

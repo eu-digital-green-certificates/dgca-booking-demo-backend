@@ -38,6 +38,6 @@ public class BookingH2Entity {
     @Column(name = "reference", columnDefinition = "varchar(255)")
     private String reference;
 
-    @Column(name = "booking", columnDefinition = "varchar(2147483647)")
+    @Column(name = "booking", columnDefinition = "varchar(1048576)")
     private String bookingJson;
 }
