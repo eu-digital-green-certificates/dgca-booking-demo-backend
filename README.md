@@ -73,7 +73,7 @@ After all containers have started you will be able to reach the application on y
 
 ## Documentation
 
-- [ ] TODO: Documentation
+ Documentation of the Booking Demo can be found at the [EU Health Network document library](https://health.ec.europa.eu/system/files/2021-10/covid-certificate_traveller-onlinebooking_en_0.pdf)
 
 ## Support and feedback
 
