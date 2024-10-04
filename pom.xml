@@ -26,7 +26,7 @@
         <spring.cloud.version>2021.0.0</spring.cloud.version>
 	<slf4j.version>1.7.32</slf4j.version>
         <spring.test.version>5.3.9</spring.test.version>
-        <spring.security.version>5.6.0</spring.security.version>
+        <spring.security.version>5.6.4</spring.security.version>
         <lombok.version>1.18.22</lombok.version>
         <springdoc.version>1.6.0</springdoc.version>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
